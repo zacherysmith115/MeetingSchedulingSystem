@@ -1,0 +1,24 @@
+
+body {
+    background: #ddd3d5;
+    color: #333333;
+}
+
+
+.banner {
+    background-color: #2d4eba;
+    color: white;
+    padding: 0px 12px;
+}
+
+.banner a{
+   font-size: 24px;
+}
+
+.content {
+    background: #FFFFFF;
+    padding: 12px 12px;
+    margin: 12px 12px;
+    border: 2px #000000;
+    border-radius: 3px;
+}
