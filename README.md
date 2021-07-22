@@ -5,7 +5,7 @@ A simple web application to maintain and schedule meetings for a business. The s
 
 **Dependencies:**
 
-The system is built using  [Python 3.9.5](https://www.python.org/downloads/). The system will also make use of the [Flask](https://flask.palletsprojects.com/en/2.0.x/) and [SQLAlchemy](https://www.sqlalchemy.org/) modules. Flask is a micro web development framework and SQLAlchemy is a SQL toolkit. Both can be installed via pip, as shown below.
+The system is built using  [Python 3.8.10](https://www.python.org/downloads/). The system will also make use of the [Flask](https://flask.palletsprojects.com/en/2.0.x/) and [SQLAlchemy](https://www.sqlalchemy.org/) modules. Flask is a micro web development framework and SQLAlchemy is a SQL toolkit. Both can be installed via pip, as shown below.
 
 ```shell
 pip install Flask

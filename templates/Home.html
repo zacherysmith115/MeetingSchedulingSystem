@@ -20,20 +20,40 @@
         <a>PennSateSoft - Meeting Scheudling System</a>
     </header>
 
-    <main role="main" class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
+      <main role="main" class="container">
+        <div class="row">
+          <div class="col-md-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
                 {% for category, message in messages %}
-                <div class="alert alert-{{ category }}" role="alert">
+                  <div class="alert alert-{{ category }}">
                     {{ message }}
-                </div>
+                  </div>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
+              {% endif %}
+            {% endwith %}
 
-        <!-- Placeholder for content in other HTML files-->
-        {% block content %}
-        {% endblock %}
+            {% block content %}
+            {% endblock %}
+          </div>
+          <div class="col-md-4">
+            <div class="content-section">
+              <h3>Navigation Pane</h3>
+                <ul class="list-group">
+                  <li class="list-group-item list-group-item-light">
+                        <a href="{{url_for('dashboard')}}">Dashboard</a>
+                  </li>
+                  <li class="list-group-item list-group-item-light">My Meetings</li>
+                  <li class="list-group-item list-group-item-light">Edit Profile</li>
+                  <li class="list-group-item list-group-item-light">Ticket Center</li>
+                  <li class="list-group-item list-group-item-light">Help</li>
+                  <li class="list-group-item list-group-item-light">
+                    <a href="{{url_for('login')}}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+          </div>
+        </div>
     </main>
 
     <!-- BootStrap JS -->

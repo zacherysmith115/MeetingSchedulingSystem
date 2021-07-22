@@ -2,6 +2,7 @@
 {% block content %}
     <div class="content">
         <form method="POST" action="">
+            {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <div class="form-group">
                     {{form.email.label(class="form-control-label")}}
