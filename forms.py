@@ -15,3 +15,6 @@ class CreateAccountForm(FlaskForm):
     password_confirm = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
     
     submit = SubmitField('Create Account')
+
+
+    //test
