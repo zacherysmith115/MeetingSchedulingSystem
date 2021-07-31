@@ -1,20 +1,39 @@
 from flask import render_template, url_for, flash, redirect
 from mss.forms import EditAccountForm, LoginForm, CreateAccountForm
 from mss import app, db
-from mss.usermodels import User, Client
+from mss.models import User, Client, Admin
 
- # contains all the routing script to navigate the application #
+ # contains all the routing scripts to navigate the application #
 
+
+# Login routing method
 @app.route("/", methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        user = db.session.query(User).filter(User.email == form.email.data)[0]
-        if(user.password == form.password.data):
-            return redirect(url_for('dashboard'))
 
+    # Ensure validation of form
+    if form.validate_on_submit():
+
+        # Query the db for email
+        user = db.session.query(User).filter(User.email == form.email.data).first()
+
+        # Ensure email is in the db and submited password matches password on record
+        if(user and user.password == form.password.data):
+
+            # Route to client home page
+            if(isinstance(user, Client)):
+                return redirect(url_for('dashboard'))
+
+            # Route to admin home page
+            if(isinstance(user, Admin)):
+                return redirect(url_for('dashboard'))
+        
+    # Credentials failed, resumbit Login page
     return render_template('Login.html', form=form)
 
+
+
+# Create account routing method
 @app.route("/CreateAccount", methods = ['GET', 'POST'])
 def createAccount():
     form = CreateAccountForm()
@@ -29,10 +48,14 @@ def createAccount():
             flash('Must use a valid compnay email', 'danger')
     return render_template('CreateAccount.html', form = form)
 
+
+# Client dashboard routing method
 @app.route("/Dashboard", methods = ['GET'])
 def dashboard():
     return render_template('Dashboard.html')
 
+
+# Edit account routing method
 @app.route("/EditAccount", methods = ['GET', 'POST'])
 def editAccount():
     form = EditAccountForm()

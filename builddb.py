@@ -1,5 +1,5 @@
 from mss import db
-from mss.usermodels import *
+from mss.models import *
 
 db.drop_all()
 db.create_all()
