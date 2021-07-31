@@ -1,5 +1,6 @@
 from mss import db
 
+
 # contains all the database models
 # refrence = https://docs.sqlalchemy.org/en/13/_modules/examples/inheritance/joined.html
 
@@ -14,7 +15,7 @@ class User(db.Model):
     type = db.Column(db.String(60), nullable=False)
 
     __mapper_args__ = {
-        'polymorphic_identity':'User',
+        'polymorphic_identity': 'User',
         'polymorphic_on': type
     }
 
@@ -22,22 +23,20 @@ class User(db.Model):
         return f"User: {self.first_name} {self.last_name}"
 
 
-
 class Client(User):
     __tablename__ = 'client'
 
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
-    #card = db.relationship('Card', back_populates='client', cascade='all, delete-orphan')
-    #bills = db.relationship('Bill', back_populates='client', cascade='all, delete-orphan')
+    # card = db.relationship('Card', back_populates='client', cascade='all, delete-orphan')
+    # bills = db.relationship('Bill', back_populates='client', cascade='all, delete-orphan')
 
     __mapper_args__ = {
-        'polymorphic_identity':'client'
+        'polymorphic_identity': 'client'
     }
 
     def __repr__(self) -> str:
         return f"Client: {self.first_name} {self.last_name}"
-
 
 
 class Admin(User):
@@ -46,13 +45,11 @@ class Admin(User):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
     __mapper_args__ = {
-        'polymorphic_identity':'admin'
+        'polymorphic_identity': 'admin'
     }
 
     def __repr__(self) -> str:
         return f"Admin: {self.first_name} {self.last_name}"
-
-
 
 # class Card(db.Model):
 #     __tablename__ = 'card'
@@ -66,7 +63,6 @@ class Admin(User):
 #     ccv = db.Column(db.String(3), nullable = False)
 
 
-
 # class Bill(db.Model):
 #     __tablename__ = 'bill'
 
@@ -78,4 +74,3 @@ class Admin(User):
 
 #     def __repr__(self) -> str:
 #         return f'Bill: {self.id}, {self.date}, {self.total}'
-
