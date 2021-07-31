@@ -26,8 +26,9 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
                 {% for category, message in messages %}
-                  <div class="alert alert-{{ category }}">
-                    {{ message }}
+                  <div class="alert alert-{{ category }} alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>{{category}}!: </strong>{{ message }}
                   </div>
                 {% endfor %}
               {% endif %}
@@ -41,10 +42,12 @@
               <h3>Navigation Pane</h3>
                 <ul class="list-group">
                   <li class="list-group-item list-group-item-light">
-                        <a href="{{url_for('dashboard')}}">Dashboard</a>
+                    <a href="{{url_for('dashboard')}}">Dashboard</a>
                   </li>
                   <li class="list-group-item list-group-item-light">My Meetings</li>
-                  <li class="list-group-item list-group-item-light">Edit Profile</li>
+                  <li class="list-group-item list-group-item-light">
+                    <a href="{{url_for('editAccount')}}">Edit Account</a>
+                  </li>
                   <li class="list-group-item list-group-item-light">Ticket Center</li>
                   <li class="list-group-item list-group-item-light">Help</li>
                   <li class="list-group-item list-group-item-light">
