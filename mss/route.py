@@ -3,21 +3,17 @@ from mss.forms import EditAccountForm, LoginForm, CreateAccountForm, PaymentInfo
 from mss import app, db
 from mss.models import User, Client, Admin
 
+ # contains all the routing scripts to navigate the application #
 
-# contains all the routing script to navigate the application #
 
-<<<<<<< HEAD
-@app.route("/", methods=['GET', 'POST'])
-=======
 # Login routing method
 @app.route('/', methods = ['GET', 'POST'])
->>>>>>> zachs_branch
 def login():
     form = LoginForm()
 
     # Ensure validation of form
     if form.validate_on_submit():
-        
+
         # Query the db for email
         user = db.session.query(User).filter(User.email == form.email.data).first()
 
@@ -36,29 +32,26 @@ def login():
     return render_template('Login.html', form=form)
 
 
-@app.route("/CreateAccount", methods=['GET', 'POST'])
+
+# Create account routing method
+@app.route("/CreateAccount", methods = ['GET', 'POST'])
 def createAccount():
     form = CreateAccountForm()
     if form.validate_on_submit():
         if '@pss.com' in form.email.data:
-            client = Client(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
-                            password=form.password.data)
+            client = Client(first_name = form.first_name.data, last_name = form.last_name.data, email = form.email.data, password = form.password.data)
             db.session.add(client)
             db.session.commit()
             flash('Account succesfully created for ' + form.first_name.data + ' ' + form.last_name.data, 'success')
             return redirect(url_for('dashboard'))
         else:
             flash('Must use a valid compnay email', 'danger')
-    return render_template('CreateAccount.html', form=form)
+    return render_template('CreateAccount.html', form = form)
 
 
-<<<<<<< HEAD
-@app.route("/Dashboard", methods=['GET'])
-=======
 
 # Client dashboard routing method
 @app.route('/Dashboard', methods = ['GET'])
->>>>>>> zachs_branch
 def dashboard():
     return render_template('Dashboard.html')
 
@@ -67,12 +60,6 @@ def dashboard():
 def myMeetings():
     return render_template('MyMeetings.html')
 
-<<<<<<< HEAD
-@app.route("/EditAccount", methods=['GET', 'POST'])
-def editAccount():
-    form = EditAccountForm()
-    return render_template('EditAccount.html', form=form)
-=======
 # Client edit account routing method
 @app.route('/EditAccount', methods = ['GET', 'POST'])
 def editAccount():
@@ -94,6 +81,7 @@ def ticketCenter():
 @app.route('/Help', methods =['GET', 'POST'])
 def help():
     return render_template('Help.html')
+
 
 
 # Admin dashboard routing method
@@ -131,4 +119,3 @@ def adminEditRooms():
 @app.route('/AdminUpdateUserBill', methods =['GET', 'POST'])
 def adminUpdateUserBill():
     return render_template('AdminUpdateUserBill.html')
->>>>>>> zachs_branch
