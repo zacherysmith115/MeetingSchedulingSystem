@@ -25,6 +25,11 @@ class EditAccountForm(FlaskForm):
     email = StringField('Email', validators = [DataRequired(), Email(), Length(max = 60)])
     password = PasswordField('Password', validators = [DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
+
+    submit = SubmitField('Save Changes')
+
+class PaymentInfoForm(FlaskForm):
+    card_name = StringField('Name on Card', validators = [DataRequired(), Length(max=40)])
     card_number = StringField('Card Number', validators=[Length(min = 16, max=16)])
     card_exp_date = StringField('Card Expiration Date', validators=[Length(min=5, max=5)])
     card_ccv = PasswordField('CCV', validators=[Length(min=3, max=4)])

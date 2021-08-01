@@ -1,0 +1,45 @@
+{% extends "Index.html" %}
+{% block content %}
+{% endblock content %}
+
+{% block navpane %}
+<div class="col-md-4">
+    <div class="content-section">
+        <h3>Navigation Pane:</h3>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminDashboard')}}">Dashboard</a>
+            </li>
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminEditAccount')}}">Edit Account</a>
+            </li>
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('login')}}">Logout</a>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <br>
+    <div class="content-section">
+        <h3>Admin:</h3>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminEditRooms')}}">Edit Rooms</a>
+            </li>
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminUpdateUserBill')}}">Update User Billing</a>
+            </li>
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminTicketCenter')}}">Ticket Center</a>
+            </li>
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminDisplayMeetings')}}">Display Meetings</a>
+            </li>
+            <li class="list-group-item list-group-item-light">
+                <a href="{{url_for('adminEditAdminAccounts')}}">Edit Admin Accounts</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% endblock navpane %}
