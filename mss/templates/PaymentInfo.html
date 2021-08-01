@@ -1,0 +1,73 @@
+{% extends "Home.html" %}
+{% block content %}
+<div class="content">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+
+            <div class="form-group">
+                {{form.card_name.label(class="form-control-label")}}
+                {% if form.card_name.errors %}
+                {{form.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.card_name.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.card_name(class="form-control")}}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{form.card_number.label(class="form-control-label")}}
+                {% if form.card_number.errors %}
+                {{form.card_number(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.card_number.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.card_number(class="form-control")}}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{form.card_exp_date.label(class="form-control-label")}}
+                {% if form.card_exp_date.errors %}
+                {{form.card_exp_date(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.card_exp_date.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.card_exp_date(class="form-control")}}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{form.card_ccv.label(class="form-control-label")}}
+                {% if form.card_ccv.errors %}
+                {{form.card_ccv(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.card_ccv.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.card_ccv(class="form-control")}}
+                {% endif %}
+            </div>
+
+        </fieldset>
+
+        <div class="form-group">
+            {{form.submit(class="btn btn-primary")}}
+        </div>
+
+    </form>
+</div>
+
+{% endblock content %}

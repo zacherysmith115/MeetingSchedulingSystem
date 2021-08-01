@@ -66,6 +66,9 @@ class Admin(User):
 
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
+    # one to many relationship with ticket
+    tickets = db.relationship('Ticket', back_populates='admin', uselist=False)
+
     __mapper_args__ = {
         'polymorphic_identity':'admin'
     }
@@ -86,7 +89,7 @@ class Card(db.Model):
 
     number = db.Column(db.String(16), nullable = False)
     name = db.Column(db.String(60), nullable = False)
-    expDate = db.Column(db.DateTime, nullable = False)
+    exp_date = db.Column(db.DateTime, nullable = False)
     ccv = db.Column(db.String(3), nullable = False)
 
 
@@ -129,23 +132,38 @@ class Meeting(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
 
+    def __repr__(self) -> str:
+        return f'Bill: {self.title}\n\tStart: {self.start_time}\n\tEnd: {self.total}\n\tRoom:{self.room_id}'
 
 # Room model class
 class Room(db.Model):
     __tablename__ = 'room'
 
     id = db.Column(db.Integer, primary_key=True)
+    special = db.Column(db.Boolean, default=False)
+    cost = db.Column(db.Integer, default=50)
 
     # one to many relationship with meeting
     meetings = db.relationship('Meeting', back_populates='room')
 
+    def __repr__(self) -> str:
+        return f'Room {self.id}'
 
 # Ticket model class
 class Ticket(db.Model):
     __tablename__ = 'ticket'
 
     id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    response = db.Column(db.Text, nullable=True)
 
     # many to one relationship with Client 
     creator_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     creator = db.relationship('Client', back_populates='tickets')
+
+    # many to one relationship with Admin
+    admin_id = db.Column(db.Integer, db.ForeignKey('admin.id'), nullable=True)
+    admin = db.relationship('Admin', back_populates='tickets')
+
+    def __repr__(self) -> str:
+        return f'Ticket {self.id}'
