@@ -19,7 +19,11 @@ pip install Flask-WTF
 pip install WTForms
 pip install email_validator
 pip install flask_sqlalchemy
+<<<<<<< HEAD
 pip install passlib
+=======
+pip install flask-login
+>>>>>>> zachs_branch
 ```
 
 Windows users will most likely need to set the appropriate path variable, if there is a warning message after the pip install for flask that the failure to set path. The path should be similar to below.
