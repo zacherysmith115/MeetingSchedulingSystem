@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms import validators
-from wtforms.validators import DataRequired, Length, EqualTo, Email
+from wtforms import validators, ValidationError
+from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
+from mss.models import User
 
 # Contains all the forms to dynamically server to the broswer #
 
@@ -18,6 +19,13 @@ class CreateAccountForm(FlaskForm):
     password_confirm = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
     
     submit = SubmitField('Create Account')
+
+    # custom validation 
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+
+        if user:
+            raise ValidationError('Account already created')
 
 class EditAccountForm(FlaskForm):
     first_name = StringField('First Name', validators = [DataRequired(), Length(max = 20)])

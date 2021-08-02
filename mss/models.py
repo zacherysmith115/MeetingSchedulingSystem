@@ -1,4 +1,5 @@
-from mss import db
+from mss import db, login_manager
+from flask_login import UserMixin
 
 # contains all the database models User, Client, Admin, Card, Bill
 # refrence = https://docs.sqlalchemy.org/en/13/_modules/examples/inheritance/joined.html, 
@@ -10,8 +11,12 @@ participation_table = db.Table('association', db.metadata,
                     db.Column('meeting', db.ForeignKey('meeting.id'), primary_key=True),
                     db.Column('participant', db.ForeignKey('client.id'), primary_key=True))
 
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
 # User model class
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
