@@ -106,6 +106,7 @@ def help():
     return render_template('Help.html')
 
 
+
 # Admin dashboard routing method
 @app.route('/AdminDashboard', methods = ['GET'])
 @login_required
