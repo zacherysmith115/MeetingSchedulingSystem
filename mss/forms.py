@@ -10,6 +10,13 @@ from mss.models import User
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
+<<<<<<< HEAD
+=======
+
+    email = StringField('Email', validators = [DataRequired(), Email()])
+    password = PasswordField('Password', validators = [DataRequired()])
+
+>>>>>>> main
     submit = SubmitField('Login')
 
 
@@ -45,3 +52,4 @@ class PaymentInfoForm(FlaskForm):
     card_ccv = PasswordField('CCV', validators=[Length(min=3, max=4)])
 
     submit = SubmitField('Save Changes')
+
