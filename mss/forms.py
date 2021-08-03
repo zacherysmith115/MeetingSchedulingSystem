@@ -8,14 +8,8 @@ from mss.models import User
 # Contains all the forms to dynamically server to the browser #
 
 class LoginForm(FlaskForm):
-<<<<<<< HEAD
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-=======
-    email = StringField('Email', validators = [DataRequired(), Email()])
-    password = PasswordField('Password', validators = [DataRequired()])
-    check_encrypted_password(password)  # verify against hashed password in db
->>>>>>> origin/pw_security
     submit = SubmitField('Login')
 
 
@@ -28,15 +22,12 @@ class CreateAccountForm(FlaskForm):
 
     submit = SubmitField('Create Account')
 
-<<<<<<< HEAD
-=======
     # custom validation 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
 
         if user:
             raise ValidationError('Account already created')
->>>>>>> zachs_branch
 
 class EditAccountForm(FlaskForm):
     first_name = StringField('First Name', validators = [DataRequired(), Length(max = 20)])
@@ -44,7 +35,6 @@ class EditAccountForm(FlaskForm):
     email = StringField('Email', validators = [DataRequired(), Email(), Length(max = 60)])
     password = PasswordField('Password', validators = [DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
-<<<<<<< HEAD
 
     submit = SubmitField('Save Changes')
 
@@ -55,7 +45,3 @@ class PaymentInfoForm(FlaskForm):
     card_ccv = PasswordField('CCV', validators=[Length(min=3, max=4)])
 
     submit = SubmitField('Save Changes')
-=======
-    encrypt_password(password)  # encrypt here
-    submit = SubmitField('Create Account')
->>>>>>> origin/pw_security
