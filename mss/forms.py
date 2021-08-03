@@ -5,7 +5,6 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email
 class LoginForm(FlaskForm):
     email = StringField('Email', validators = [DataRequired(), Email()])
     password = PasswordField('Password', validators = [DataRequired()])
-    check_encrypted_password(password)  # verify against hashed password in db
     submit = SubmitField('Login')
 
 class CreateAccountForm(FlaskForm):
@@ -14,5 +13,4 @@ class CreateAccountForm(FlaskForm):
     email = StringField('Email', validators = [DataRequired(), Email(), Length(max = 60)])
     password = PasswordField('Password', validators = [DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators = [DataRequired(), EqualTo('password')])
-    encrypt_password(password)  # encrypt here
     submit = SubmitField('Create Account')
