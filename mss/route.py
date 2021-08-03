@@ -1,8 +1,11 @@
+from datetime import datetime
 from flask import render_template, url_for, flash, redirect
+from werkzeug.wrappers import request
 from mss.forms import EditAccountForm, LoginForm, CreateAccountForm, PaymentInfoForm
 from mss import app, db
-from mss.models import User, Client, Admin
+from mss.models import *
 from flask_login import login_user, current_user, logout_user, login_required
+from sqlalchemy.orm.collections import InstrumentedList 
 
 # contains all the routing scripts to navigate the application #
 
@@ -61,15 +64,27 @@ def createAccount():
 @login_required
 def dashboard():
 
-    # will want to populate the with user data place holder for example #
-    meetings = [
-        {
-            'title' : 'Meeting 1',
-            'start' : '2021-08-01T08:00:00.000'
-        }
-    ]
+    # Build meetings list to add to calendar
+    meetings = []
+    if type(current_user.meetings_participant) is InstrumentedList:
+        meetings.extend(current_user.meetings_participant) 
+    else:
+        meetings.append(current_user.meetings_participant)
+ 
+    if type(current_user.meetings_creator) is InstrumentedList:
+        meetings.extend(current_user.meetings_creator)
+    else:
+         meetings.append(current_user.meetings_creator)
 
-    return render_template('Dashboard.html', events = meetings)
+
+    meeting_events = []
+    for meeting in meetings:
+        meeting_events.append({'title' : meeting.title,
+                               'start' : meeting.start_time,
+                               'end' : meeting.end_time})
+    
+
+    return render_template('Dashboard.html', events = meeting_events)
 
 
 
@@ -84,6 +99,24 @@ def myMeetings():
 @login_required
 def editAccount():
     form = EditAccountForm()
+
+    if not form.validate_on_submit():
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.email.data = current_user.email
+        return render_template('EditAccount.html', form = form)
+
+    if form.validate_on_submit():
+        user = User.query.filter(User.id == current_user.id).first()
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        user.email = form.email.data
+        user.password = form.password.data
+        print(user)
+        db.session.commit()
+        return render_template('EditAccount.html', form = form)
+
+
     return render_template('EditAccount.html', form = form)
 
 # Client add payment info routing method
@@ -91,6 +124,51 @@ def editAccount():
 @login_required
 def addPaymentInfo():
     form = PaymentInfoForm()
+    card = current_user.card
+
+    #If already has a card populate some of the information
+    if not form.validate_on_submit():
+        if card is not None:
+            form.card_name.data = card.name
+
+            hidden_number = card.number
+            hidden_number = '*' * 12 + card.number[len(card.number) - 4:]
+            form.card_number.data = hidden_number
+
+            month_str = str(card.exp_date.month)
+            if len(month_str) != 2:
+                month_str = '0' + month_str
+            
+            year_str = str(card.exp_date.year)
+            year_str = year_str[2:]
+
+            form.card_exp_date.data = month_str + '/' + year_str
+
+            return render_template('PaymentInfo.html', form = form)
+
+    # form is validated on submit record to db
+    if form.validate_on_submit():
+        exp_date_str = form.card_exp_date.data
+        date = datetime(year = int('20' + exp_date_str[3:]), month = int(exp_date_str[0:2]), day=1)
+
+        # No previous associated card information
+        if card is None:
+            card = Card(client_id = current_user.id, name = form.card_name.data,
+                    number = form.card_number.data, exp_date = date, ccv = form.card_ccv.data)
+            db.session.add(card)
+        else:
+            card = Card.query.filter(Card.client_id == current_user.id).first()
+            card.name = form.card_name.data
+            card.number = form.card_number.data
+            card.exp_date = date
+            card.ccv = form.card_ccv.data
+            
+       
+        db.session.commit()
+
+        flash('Payment info updated', 'success')
+        return render_template('PaymentInfo.html', form = form)
+    
     return render_template('PaymentInfo.html', form = form)
 
 # Client ticket center routing method

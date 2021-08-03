@@ -10,13 +10,6 @@ from mss.models import User
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-<<<<<<< HEAD
-=======
-
-    email = StringField('Email', validators = [DataRequired(), Email()])
-    password = PasswordField('Password', validators = [DataRequired()])
-
->>>>>>> main
     submit = SubmitField('Login')
 
 
@@ -48,7 +41,7 @@ class EditAccountForm(FlaskForm):
 class PaymentInfoForm(FlaskForm):
     card_name = StringField('Name on Card', validators = [DataRequired(), Length(max=40)])
     card_number = StringField('Card Number', validators=[Length(min = 16, max=16)])
-    card_exp_date = StringField('Card Expiration Date', validators=[Length(min=5, max=5)])
+    card_exp_date = StringField('Card Expiration Date (MM/YY)', validators=[Length(min=5, max=5)])
     card_ccv = PasswordField('CCV', validators=[Length(min=3, max=4)])
 
     submit = SubmitField('Save Changes')

@@ -23,12 +23,12 @@
 
 <body>
     <header class="banner">
-        <a>PennSateSoft - Meeting Scheudling System</a>
+        <a>PennSateSoft - Meeting Scheduling System</a>
     </header>
 
     <main role="main" class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+        <div class="row justify-content-center" style="Height: 850px; width: 600;">
+            <div class="col-md-9 h-100 w-100">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                 {% for category, message in messages %}

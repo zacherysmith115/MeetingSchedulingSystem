@@ -42,9 +42,6 @@ class Client(User):
 
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
-    # one to one relationship with card
-    card = db.relationship('Card', back_populates='client', uselist=False)
-
     # one to many relationship with bill
     bills = db.relationship('Bill', back_populates='client')
 
@@ -90,13 +87,15 @@ class Card(db.Model):
 
     # one to one relationship with client
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
-    client = db.relationship('Client', back_populates='card')
+    client = db.relationship('Client', backref=db.backref('card', uselist=False))
 
     number = db.Column(db.String(16), nullable = False)
     name = db.Column(db.String(60), nullable = False)
     exp_date = db.Column(db.DateTime, nullable = False)
     ccv = db.Column(db.String(3), nullable = False)
 
+    def __repr__(self) -> str:
+        return f'{self.name}: *************{self.number[12:]}'
 
 # Billing model class
 class Bill(db.Model):
@@ -138,7 +137,7 @@ class Meeting(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self) -> str:
-        return f'Bill: {self.title}\n\tStart: {self.start_time}\n\tEnd: {self.total}\n\tRoom:{self.room_id}'
+        return f'Meeting: {self.title}\n\tStart: {self.start_time}\n\tEnd: {self.end_time}\n\tRoom:{self.room_id}'
 
 # Room model class
 class Room(db.Model):
