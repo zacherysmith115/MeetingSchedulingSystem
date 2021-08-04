@@ -4,7 +4,6 @@
     <form method="POST" action="">
         {{ delform.hidden_tag() }}
         <fieldset class="form-group">
-
             <div class="form-group">
                 {{delform.del_room.label(class="form-control-label")}}
                 {% if delform.del_room.errors %}
@@ -16,6 +15,9 @@
                 </div>
                 {% else %}
                 {{delform.del_room(class="form-control")}}
+
+
+
                 {% endif %}
             </div>
         </fieldset>

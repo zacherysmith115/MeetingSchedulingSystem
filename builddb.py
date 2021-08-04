@@ -22,10 +22,14 @@ db.session.add(james)
 db.session.add(kelly)
 
 # populate payment info
-johns_card = Card(client_id=john.id, client=john, number='6988019516364371', name='John Doe', exp_date=datetime.date(year=2022, month=9, day=1), ccv='797')
-sarahs_card = Card(client_id=sarah.id, client=sarah, number='5456141426522113', name='Sarah Brown', exp_date=datetime.date(year=2023, month=7, day=1), ccv='535')
-james_card = Card(client_id=james.id, client=james, number='2302857125016344', name='James Cook', exp_date=datetime.date(year=2021, month=12, day=1), ccv='459')
-kellys_card = Card(client_id=james.id, client=james, number='5215353134814512', name='James Cook', exp_date=datetime.date(year=2021, month=12, day=1), ccv='467')
+johns_card = Card(client_id=john.id, client=john, number='6988019516364371', name='John Doe',
+                  exp_date=datetime.date(year=2022, month=9, day=1), ccv='797')
+sarahs_card = Card(client_id=sarah.id, client=sarah, number='5456141426522113', name='Sarah Brown',
+                   exp_date=datetime.date(year=2023, month=7, day=1), ccv='535')
+james_card = Card(client_id=james.id, client=james, number='2302857125016344', name='James Cook',
+                  exp_date=datetime.date(year=2021, month=12, day=1), ccv='459')
+kellys_card = Card(client_id=james.id, client=james, number='5215353134814512', name='James Cook',
+                   exp_date=datetime.date(year=2021, month=12, day=1), ccv='467')
 db.session.add(johns_card)
 db.session.add(sarahs_card)
 db.session.add(james_card)
@@ -44,18 +48,18 @@ db.session.add(room_200)
 # populate meetings: all meetings will be based on week 8/9 - 8/13
 m1_start_time = datetime.datetime(year=2021, month=8, day=9, hour=8)
 m1_end_time = datetime.datetime(year=2021, month=8, day=9, hour=9)
-m1 = Meeting(creator_id = john.id, creator=john, participants=[sarah, james, kelly], title='Monday morning meeting',
-        room_id=room_101.id, room=room_101, start_time=m1_start_time, end_time=m1_end_time )
+m1 = Meeting(creator_id=john.id, creator=john, participants=[sarah, james, kelly], title='Monday morning meeting',
+             room_id=room_101.id, room=room_101, start_time=m1_start_time, end_time=m1_end_time)
 
 m2_start_time = datetime.datetime(year=2021, month=8, day=11, hour=12)
 m2_end_time = datetime.datetime(year=2021, month=8, day=11, hour=13)
-m2 = Meeting(creator_id = sarah.id, creator=sarah, participants=[john, james, kelly], title='Wednesday lunch',
-        room_id=room_102.id, room=room_102, start_time=m2_start_time, end_time=m2_end_time )
+m2 = Meeting(creator_id=sarah.id, creator=sarah, participants=[john, james, kelly], title='Wednesday lunch',
+             room_id=room_102.id, room=room_102, start_time=m2_start_time, end_time=m2_end_time)
 
 m3_start_time = datetime.datetime(year=2021, month=8, day=13, hour=14)
 m3_end_time = datetime.datetime(year=2021, month=8, day=13, hour=15)
-m3 = Meeting(creator_id = james.id, creator=james, participants=[john, james, kelly], title='Friday afternoon meeting',
-        room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time )
+m3 = Meeting(creator_id=james.id, creator=james, participants=[john, james, kelly], title='Friday afternoon meeting',
+             room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time)
 
 db.session.add(m1)
 db.session.add(m2)

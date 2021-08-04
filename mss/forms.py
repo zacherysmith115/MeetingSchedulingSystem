@@ -3,6 +3,8 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms import validators, ValidationError
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from mss.models import User
+from mss import app, db
+from sqlalchemy import inspect
 
 
 # Contains all the forms to dynamically server to the browser #
@@ -22,7 +24,7 @@ class CreateAccountForm(FlaskForm):
 
     submit = SubmitField('Create Account')
 
-    # custom validation 
+    # custom validation
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
 
