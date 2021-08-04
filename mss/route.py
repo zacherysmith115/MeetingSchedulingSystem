@@ -8,6 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy.orm.collections import InstrumentedList
 from sqlalchemy.sql import *
 
+
 # contains all the routing scripts to navigate the application #
 
 # Login routing method
@@ -237,14 +238,14 @@ def adminEditRooms():
         print(Room.query.filter_by(id=addform.add_room.data).first())
         # Check if room exists 
         if Room.query.filter_by(id=addform.add_room.data).first() is None:
-            room = Room(id=addform.add_room.data, special = False)
+            room = Room(id=addform.add_room.data, special=False)
             db.session.add(room)
             db.session.commit()
             flash('Room ' + addform.add_room.data + ' Added', 'success')
             return redirect(url_for('adminEditRooms'))
 
         else:
-            flash('Room ' +  addform.add_room.data + ' already exists! No changes made.', 'danger')
+            flash('Room ' + addform.add_room.data + ' already exists! No changes made.', 'danger')
             return redirect(url_for('adminEditRooms'))
 
     return render_template('AdminEditRooms.html', delform=delform, addform=addform, rooms=Room.query.all())
@@ -255,4 +256,3 @@ def adminEditRooms():
 @login_required
 def adminUpdateUserBill():
     return render_template('AdminUpdateUserBill.html')
-
