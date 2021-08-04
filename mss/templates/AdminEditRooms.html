@@ -50,4 +50,29 @@
 
     </form>
 </div>
+
+<br>
+<div class = "content">
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Room #</th>
+            <th scope="col">Special</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Meetings Scheduled</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for room in rooms %}  
+          <tr>
+            <th scope="row">{{room.id}}</th>
+            <td>{{room.special}}</td>
+            <td>{{room.cost}}</td>
+            <td>True</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+</div>
+
 {% endblock content %}

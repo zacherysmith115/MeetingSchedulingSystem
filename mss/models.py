@@ -148,7 +148,7 @@ class Room(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     special = db.Column(db.Boolean, default=False)
-    cost = db.Column(db.Integer, default=50)
+    cost = db.Column(db.Integer, default=None)
 
     # one to many relationship with meeting
     meetings = db.relationship('Meeting', back_populates='room')

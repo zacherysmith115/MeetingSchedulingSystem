@@ -227,29 +227,27 @@ def adminEditRooms():
     delform = DelRoomForm()
     addform = AddRoomForm()
 
-    #if not delform.validate_on_submit():
-    #    return render_template('AdminEditRooms.html', delform=delform, addform=addform)
-
     if delform.validate_on_submit():
         Room.query.filter_by(id=delform.del_room.data).delete()
         db.session.commit()
-        flash('Room ' + delform.del_room.data + ' Removed')
-        return redirect('AdminEditRooms')
-
-    if not addform.validate_on_submit():
-        return render_template('AdminEditRooms.html', delform=delform, addform=addform)
+        flash('Room ' + delform.del_room.data + ' Removed', 'success')
+        return redirect(url_for('adminEditRooms'))
 
     if addform.validate_on_submit():
-        room = Room(id=addform.add_room.data)
-        #exists = db.session.query(Room).filter_by(id=addform.add_room.data) is not None
-        #if exists:
-        #    return redirect('AdminEditRooms')
-        db.session.add(room)
-        db.session.commit()
-        flash('Room ' + addform.add_room.data + ' Added')
-        return redirect('AdminEditRooms')
+        print(Room.query.filter_by(id=addform.add_room.data).first())
+        # Check if room exists 
+        if(Room.query.filter_by(id=addform.add_room.data).first() is None):
+            room = Room(id=addform.add_room.data, special = False)
+            db.session.add(room)
+            db.session.commit()
+            flash('Room ' + addform.add_room.data + ' Added', 'success')
+            return redirect(url_for('adminEditRooms'))
 
-    return render_template('AdminEditRooms.html', delform=delform, addform=addform)
+        else:
+            flash('Room ' +  addform.add_room.data + ' already exists! No changes made.', 'danger')
+            return redirect(url_for('adminEditRooms'))
+
+    return render_template('AdminEditRooms.html', delform=delform, addform=addform, rooms=Room.query.all())
 
 
 # Admin update bill routing method
