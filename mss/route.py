@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import render_template, url_for, flash, redirect
 from werkzeug.wrappers import request
-from mss.forms import EditAccountForm, LoginForm, CreateAccountForm, PaymentInfoForm
+from mss.forms import *
 from mss import app, db
 from mss.models import *
 from flask_login import login_user, current_user, logout_user, login_required
@@ -216,14 +216,19 @@ def adminDisplayMeetings():
 def adminEditAdminAccounts():
     return render_template('AdminEditAdminAccounts.html')
 
+
 # Admin edit rooms routing method
 @app.route('/AdminEditRooms', methods =['GET', 'POST'])
 @login_required
 def adminEditRooms():
-    return render_template('AdminEditRooms.html')
+    delform = DelRoomForm()
+    addform = AddRoomForm()
+    return render_template('AdminEditRooms.html', delform=delform, addform=addform)
 
-# Admin edit rooms routing method
+
+# Admin update bill routing method
 @app.route('/AdminUpdateUserBill', methods =['GET', 'POST'])
 @login_required
 def adminUpdateUserBill():
     return render_template('AdminUpdateUserBill.html')
+

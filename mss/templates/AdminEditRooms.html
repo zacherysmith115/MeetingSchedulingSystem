@@ -1,4 +1,51 @@
 {% extends "AdminHome.html" %}
 {% block content %}
+<div class="content">
+    <form method="POST" action="">
+        {{ delform.hidden_tag() }}
+        <fieldset class="form-group">
 
+            <div class="form-group">
+                {{delform.del_room.label(class="form-control-label")}}
+                {% if delform.del_room.errors %}
+                {{delform.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in delform.del_room.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{delform.del_room(class="form-control")}}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{delform.submit(class="btn btn-primary")}}
+        </div>
+    </form>
+
+    <form method="POST" action="">
+        {{ addform.hidden_tag() }}
+        <fieldset class="form-group">
+
+            <div class="form-group">
+                {{addform.add_room.label(class="form-control-label")}}
+                {% if addform.add_room.errors %}
+                {{addform.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in addform.add_room.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{addform.add_room(class="form-control")}}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{addform.submit(class="btn btn-primary")}}
+        </div>
+
+    </form>
+</div>
 {% endblock content %}

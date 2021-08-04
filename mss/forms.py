@@ -47,3 +47,13 @@ class PaymentInfoForm(FlaskForm):
     card_ccv = PasswordField('CCV', validators=[Length(min=3, max=4)])
 
     submit = SubmitField('Save Changes')
+
+
+class DelRoomForm(FlaskForm):
+    del_room = StringField('Delete Room', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Delete Room Submit')
+
+
+class AddRoomForm(FlaskForm):
+    add_room = StringField('Add Room', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Add Room Submit')
