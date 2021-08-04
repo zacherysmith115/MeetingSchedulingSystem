@@ -236,7 +236,7 @@ def adminEditRooms():
     if addform.validate_on_submit():
         print(Room.query.filter_by(id=addform.add_room.data).first())
         # Check if room exists 
-        if(Room.query.filter_by(id=addform.add_room.data).first() is None):
+        if Room.query.filter_by(id=addform.add_room.data).first() is None:
             room = Room(id=addform.add_room.data, special = False)
             db.session.add(room)
             db.session.commit()
