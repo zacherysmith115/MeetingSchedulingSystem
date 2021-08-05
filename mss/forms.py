@@ -59,3 +59,10 @@ class DelRoomForm(FlaskForm):
 class AddRoomForm(FlaskForm):
     add_room = StringField('Add Room', validators=[DataRequired(), Length(max=20)])
     submit = SubmitField('Add Room Submit')
+
+
+class UpdateUserBill(FlaskForm):
+    total = StringField('Update Total', validators=[DataRequired(), Length(max=20)])
+    date = StringField('Update Due Date', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Submit Billing Changes')
+

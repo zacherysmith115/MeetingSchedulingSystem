@@ -255,4 +255,17 @@ def adminEditRooms():
 @app.route('/AdminUpdateUserBill', methods=['GET', 'POST'])
 @login_required
 def adminUpdateUserBill():
-    return render_template('AdminUpdateUserBill.html')
+    form = UpdateUserBill()
+
+    if form.validate_on_submit():
+        total = Bill(id=form.total.data, special=False)
+        db.session.add(total)
+        db.session.commit()
+        flash('Bill updated')
+        return redirect(url_for('adminUpdateUserBill'))
+
+    #else:
+    #    flash('Error please try again')
+    #    return redirect(url_for('adminUpdateUserBill'))
+
+    return render_template('AdminUpdateUserBill.html', form=form)

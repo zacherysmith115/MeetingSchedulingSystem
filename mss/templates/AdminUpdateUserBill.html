@@ -1,4 +1,42 @@
 {% extends "AdminHome.html" %}
 {% block content %}
+<div class="content">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <div class="form-group">
+                {{form.total.label(class="form-control-label")}}
+                {% if form.total.errors %}
+                {{form.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.total.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.total(class="form-control")}}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{form.date.label(class="form-control-label")}}
+                {% if form.date.errors %}
+                {{form.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.date.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.date(class="form-control")}}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{form.submit(class="btn btn-primary")}}
+        </div>
+
+    </form>
+</div>
 
 {% endblock content %}
