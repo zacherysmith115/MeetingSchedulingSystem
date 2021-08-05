@@ -62,6 +62,7 @@ class AddRoomForm(FlaskForm):
 
 
 class UpdateUserBill(FlaskForm):
+    client_id = StringField('Client ID', validators=[DataRequired(), Length(max=20)])
     total = StringField('Update Total', validators=[DataRequired(), Length(max=20)])
     date = StringField('Update Due Date', validators=[DataRequired(), Length(max=20)])
     submit = SubmitField('Submit Billing Changes')

@@ -268,4 +268,5 @@ def adminUpdateUserBill():
     #    flash('Error please try again')
     #    return redirect(url_for('adminUpdateUserBill'))
 
-    return render_template('AdminUpdateUserBill.html', form=form)
+    return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
+                           bill=Bill.query.all())
