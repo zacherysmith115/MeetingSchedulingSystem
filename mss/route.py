@@ -211,22 +211,53 @@ def adminTicketCenter():
 @app.route('/AdminDisplayMeetings', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetings():
-    meetings = ['By Week', 'By Day', 'By Room', 'By Person', 'By Time Slot']
     form = AdminSelectMeeting()
+    form.select_meeting.choices = ['By Week', 'By Day', 'By Room', 'By Person', 'By Time Slot']
     room = form.select_meeting.data
-    if room == 'By Week':
-        return render_template('AdminDisplayMeetingsByWeek.html')
+    if room == "By Week":
+        return redirect(url_for('adminDisplayMeetingsByWeek'))
     if room == 'By Day':
-        return render_template('AdminDisplayMeetingsByDay.html')
+        return redirect(url_for('adminDisplayMeetingsByDay'))
     if room == 'By Person':
-        return render_template('AdminDisplayMeetingsByPerson.html')
+        return redirect(url_for('adminDisplayMeetingsByPerson'))
     if room == 'By Room':
-        return render_template('AdminDisplayMeetingsByRoom.html')
+        return redirect(url_for('adminDisplayMeetingsByRoom'))
     if room == 'By Time Slot':
-        return render_template('AdminDisplayMeetingsByTime.html')
+        return redirect(url_for('adminDisplayMeetingsByTime'))
     else:
-        return render_template('AdminDisplayMeetings.html', meetings=meetings, form=form)
+        return render_template('AdminDisplayMeetings.html', form=form)
 
+
+# Admin Display Meetings By Week
+@app.route('/AdminDisplayMeetingsByWeek', methods=['GET', 'POST'])
+@login_required
+def adminDisplayMeetingsByWeek():
+    return render_template('AdminDisplayMeetingsByWeek.html')
+
+
+# Admin Display Meetings By Day
+@app.route('/AdminDisplayMeetingsByDay', methods=['GET', 'POST'])
+@login_required
+def adminDisplayMeetingsByDay():
+    return render_template('AdminDisplayMeetingsByDay.html')
+
+# Admin Display Meetings By Person
+@app.route('/AdminDisplayMeetingsByPerson', methods=['GET', 'POST'])
+@login_required
+def adminDisplayMeetingsByPerson():
+    return render_template('AdminDisplayMeetingsByPerson.html')
+
+# Admin Display Meetings By Room
+@app.route('/AdminDisplayMeetingsByRoom', methods=['GET', 'POST'])
+@login_required
+def adminDisplayMeetingsByRoom():
+    return render_template('AdminDisplayMeetingsByRoom.html')
+
+# Admin Display Meetings By Time
+@app.route('/AdminDisplayMeetingsByTime', methods=['GET', 'POST'])
+@login_required
+def adminDisplayMeetingsByTime():
+    return render_template('AdminDisplayMeetingsByTime.html')
 
 # Admin edit admin accounts routing method
 @app.route('/AdminEditAdminAccounts', methods=['GET', 'POST'])

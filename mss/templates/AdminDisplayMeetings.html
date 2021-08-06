@@ -1,21 +1,39 @@
 {% extends "AdminHome.html" %}
 {% block content %}
 <div class="content">
-    <form name="meeting_selection" action="" method="POST">
+    <form action="" method="POST">
         {{  form.hidden_tag() }}
+        <fieldset class="form-group">
 
-        <label for="ChooseMeeting">Choose Meeting</label>
-        <br>
-            <select name="meetings">
-                {% for meeting in meetings %}
-                    <option value= "{{meeting}}" SELECTED>{{meeting}}</option>
-                {% endfor %}
-            </select>
+            <div class="form-group">
+                {{form.select_meeting.label(class="form-control-label")}}
+                {% if form.select_meeting.errors %}
+                    {{form.select_meeting(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.select_meeting.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{form.select_meeting(class="form-control")}}
+                {% endif %}
+            </div>
+
+
+
+
+
+
+
 
         <br><br>
+
         <div class="form-group">
             {{form.submit(class="btn btn-primary")}}
         </div>
+
+        </fieldset>
+
     </form>
 </div>
 

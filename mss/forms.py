@@ -82,5 +82,5 @@ class UpdateUserBill(FlaskForm):
 
 
 class AdminSelectMeeting(FlaskForm):
-    select_meeting = StringField('Client ID', validators=[DataRequired(), Length(max=20)])
+    select_meeting = SelectField('Please Select Meetings to Display', coerce=str)
     submit = SubmitField('Display Meetings')
