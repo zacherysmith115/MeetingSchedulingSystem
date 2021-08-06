@@ -241,11 +241,13 @@ def adminDisplayMeetingsByWeek():
 def adminDisplayMeetingsByDay():
     return render_template('AdminDisplayMeetingsByDay.html')
 
+
 # Admin Display Meetings By Person
 @app.route('/AdminDisplayMeetingsByPerson', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByPerson():
     return render_template('AdminDisplayMeetingsByPerson.html')
+
 
 # Admin Display Meetings By Room
 @app.route('/AdminDisplayMeetingsByRoom', methods=['GET', 'POST'])
@@ -253,11 +255,13 @@ def adminDisplayMeetingsByPerson():
 def adminDisplayMeetingsByRoom():
     return render_template('AdminDisplayMeetingsByRoom.html')
 
+
 # Admin Display Meetings By Time
 @app.route('/AdminDisplayMeetingsByTime', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByTime():
     return render_template('AdminDisplayMeetingsByTime.html')
+
 
 # Admin edit admin accounts routing method
 @app.route('/AdminEditAdminAccounts', methods=['GET', 'POST'])
