@@ -208,10 +208,11 @@ def adminTicketCenter():
 
 
 # Admin display meetings routing method
-@app.route('/AdminDisplayMeeetings', methods=['GET', 'POST'])
+@app.route('/AdminDisplayMeetings', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetings():
-    return render_template('AdminDisplayMeetings.html')
+    meetings = ['By Week', 'By Day', 'By Room', 'By Person', 'By Time Slot']
+    return render_template('AdminDisplayMeetings.html', meetings=meetings)
 
 
 # Admin edit admin accounts routing method
@@ -264,9 +265,12 @@ def adminUpdateUserBill():
         flash('Bill updated')
         return redirect(url_for('adminUpdateUserBill'))
 
-    #else:
+    # else:
     #    flash('Error please try again')
     #    return redirect(url_for('adminUpdateUserBill'))
 
     return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
                            bill=Bill.query.all())
+
+
+

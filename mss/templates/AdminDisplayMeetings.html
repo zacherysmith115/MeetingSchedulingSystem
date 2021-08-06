@@ -1,4 +1,18 @@
 {% extends "AdminHome.html" %}
 {% block content %}
+<div class="content">
+        <form name="Item_1" action="/getMeeting" method="POST">
+            <label for="ChooseMeeting">Choose Meeting</label>
+
+                <select name="meetings">
+                    {% for meeting in meetings %}
+                        <option value= "{{meeting}}" SELECTED>{{meeting}}</option>
+                    {% endfor %}
+                </select>
+
+
+
+        </form>
+</div>
 
 {% endblock content %}
