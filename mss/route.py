@@ -213,7 +213,19 @@ def adminTicketCenter():
 def adminDisplayMeetings():
     meetings = ['By Week', 'By Day', 'By Room', 'By Person', 'By Time Slot']
     form = AdminSelectMeeting()
-    return render_template('AdminDisplayMeetings.html', meetings=meetings, form=form)
+    room = form.select_meeting.data
+    if room == 'By Week':
+        return render_template('AdminDisplayMeetingsByWeek.html')
+    if room == 'By Day':
+        return render_template('AdminDisplayMeetingsByDay.html')
+    if room == 'By Person':
+        return render_template('AdminDisplayMeetingsByPerson.html')
+    if room == 'By Room':
+        return render_template('AdminDisplayMeetingsByRoom.html')
+    if room == 'By Time Slot':
+        return render_template('AdminDisplayMeetingsByTime.html')
+    else:
+        return render_template('AdminDisplayMeetings.html', meetings=meetings, form=form)
 
 
 # Admin edit admin accounts routing method
