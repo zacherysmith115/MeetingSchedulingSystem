@@ -212,7 +212,8 @@ def adminTicketCenter():
 @login_required
 def adminDisplayMeetings():
     meetings = ['By Week', 'By Day', 'By Room', 'By Person', 'By Time Slot']
-    return render_template('AdminDisplayMeetings.html', meetings=meetings)
+    form = AdminSelectMeeting()
+    return render_template('AdminDisplayMeetings.html', meetings=meetings, form=form)
 
 
 # Admin edit admin accounts routing method

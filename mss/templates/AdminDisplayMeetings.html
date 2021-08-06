@@ -1,18 +1,22 @@
 {% extends "AdminHome.html" %}
 {% block content %}
 <div class="content">
-        <form name="Item_1" action="/getMeeting" method="POST">
-            <label for="ChooseMeeting">Choose Meeting</label>
+    <form name="Item_1" action="/getMeeting" method="POST">
+        {{  form.hidden_tag() }}
 
-                <select name="meetings">
-                    {% for meeting in meetings %}
-                        <option value= "{{meeting}}" SELECTED>{{meeting}}</option>
-                    {% endfor %}
-                </select>
+        <label for="ChooseMeeting">Choose Meeting</label>
+        <br>
+            <select name="meetings">
+                {% for meeting in meetings %}
+                    <option value= "{{meeting}}" SELECTED>{{meeting}}</option>
+                {% endfor %}
+            </select>
 
-
-
-        </form>
+        <br><br>
+        <div class="form-group">
+            {{form.submit(class="btn btn-primary")}}
+        </div>
+    </form>
 </div>
 
 {% endblock content %}

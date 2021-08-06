@@ -67,3 +67,7 @@ class UpdateUserBill(FlaskForm):
     date = StringField('Update Due Date', validators=[DataRequired(), Length(max=20)])
     submit = SubmitField('Submit Billing Changes')
 
+
+class AdminSelectMeeting(FlaskForm):
+    select_meeting = StringField('Client ID', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Display Meetings')
