@@ -48,18 +48,21 @@ db.session.add(room_200)
 # populate meetings: all meetings will be based on week 8/9 - 8/13
 m1_start_time = datetime.datetime(year=2021, month=8, day=9, hour=8)
 m1_end_time = datetime.datetime(year=2021, month=8, day=9, hour=9)
+m1_descr = 'To review the upcoming tasks for the week, and plan out who will be handling what.'
 m1 = Meeting(creator_id=john.id, creator=john, participants=[sarah, james, kelly], title='Monday morning meeting',
-             room_id=room_101.id, room=room_101, start_time=m1_start_time, end_time=m1_end_time)
+             room_id=room_101.id, room=room_101, start_time=m1_start_time, end_time=m1_end_time, description = m1_descr)
 
 m2_start_time = datetime.datetime(year=2021, month=8, day=11, hour=12)
 m2_end_time = datetime.datetime(year=2021, month=8, day=11, hour=13)
+m2_descr = 'Recurring lunch meeting at the dining area, feel free to forward to anyone else!'
 m2 = Meeting(creator_id=sarah.id, creator=sarah, participants=[john, james, kelly], title='Wednesday lunch',
-             room_id=room_102.id, room=room_102, start_time=m2_start_time, end_time=m2_end_time)
+             room_id=room_102.id, room=room_102, start_time=m2_start_time, end_time=m2_end_time, description = m2_descr)
 
 m3_start_time = datetime.datetime(year=2021, month=8, day=13, hour=14)
 m3_end_time = datetime.datetime(year=2021, month=8, day=13, hour=15)
+m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the weekend already'
 m3 = Meeting(creator_id=james.id, creator=james, participants=[john, james, kelly], title='Friday afternoon meeting',
-             room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time)
+             room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time, description = m3_descr)
 
 db.session.add(m1)
 db.session.add(m2)

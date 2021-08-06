@@ -9,12 +9,37 @@
             nowIndicator: true,
             selectable: true,
             eventBackgroundColor: 'blue',
-            
+            customButtons: {
+                addButton: {
+                    text: 'Add',
+                    click: function(){
+                        //fetch('/dashboard/createMeeting')
+                        window.location.replace("{{url_for('createMeeting')}}")
+                    }
+                },
+
+                editButton: {
+                    text: 'Edit',
+                    click: function(){
+
+                    }
+                }
+
+
+            },
+            headerToolbar:{
+                left: 'title',
+                center: 'addButton editButton',
+                right: 'prev,next'
+
+            },
             events : [
                     {% for event in events %}
                     {
+                        id : '{{event.id}}',
                         title : '{{event.title}}',
                         start : '{{event.start}}',
+                        end : '{{event.end}}'
                     },
                     {% endfor %}
                 ], 
@@ -37,22 +62,37 @@
                 }
                 else{
                     clickInfo.event.setProp('backgroundColor', 'red');
-                    var e = document.getElementById('meeting-content');
-                    e.style.display ='block';
-                    e = document.getElementById('meeting-title');
-                    e.innerHTML = "<b>Title: </b>" + clickInfo.event.title;
+
+                    var index = clickInfo.event.id;
+                    fetch('/getmeetingdata/' + clickInfo.event.id)
+                        .then(response => response.json())
+                        .then(json => {
+                            console.log(json);
+                            console.log(json.title);
+                            
+                            document.getElementById('meeting-content').style.display = 'block';
+                            document.getElementById('meeting-title').innerHTML = json.title;
+                            document.getElementById('meeting-start').innerHTML = json.start;
+                            document.getElementById('meeting-end').innerHTML = json.end;
+
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
                 }
-                
             }
 
             });
         calendar.render();
     </script>
 
+
     <div class = 'row'>
-        <div class = 'col-md-9 justify-content-center'>
+        <div class = 'col-md-12 justify-content-center'>
             <div id='meeting-content' class='content' style='display: none'>
-                <p1 id='meeting-title'>Title: </p1>
+                <p><b>Title: </b></p><p id='meeting-title'></p>
+                <p><b>Start: </b></p><p id='meeting-start'></p>
+                <p><b>End: </b></p><p id='meeting-end'></p>
             </div>
         </div>
     </div>
