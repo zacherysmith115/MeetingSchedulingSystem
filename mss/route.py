@@ -278,23 +278,25 @@ def adminUpdateUserBill():
         flash('Bill updated')
         return redirect(url_for('adminUpdateUserBill'))
 
-    #else:
+    # else:
     #    flash('Error please try again')
     #    return redirect(url_for('adminUpdateUserBill'))
 
     return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
                            bill=Bill.query.all())
 
+
 @app.route('/getmeetingdata/<index_no>', methods=['GET'])
 @login_required
 def getMeetingData(index_no):
-
     # find the selected meeting
-    meeting = Meeting.query.filter_by(id = index_no).first()
+    meeting = Meeting.query.filter_by(id=index_no).first()
 
     # Formatting time to H:M pm/am
-    start_formatted = datetime.strptime(f'{meeting.start_time.hour:02d}:{meeting.start_time.minute:02d}', '%H:%M').strftime('%I:%M %p')
-    end_formatted = datetime.strptime(f'{meeting.end_time.hour:02d}:{meeting.end_time.minute:02d}', '%H:%M').strftime('%I:%M %p')
+    start_formatted = datetime.strptime(f'{meeting.start_time.hour:02d}:{meeting.start_time.minute:02d}',
+                                        '%H:%M').strftime('%I:%M %p')
+    end_formatted = datetime.strptime(f'{meeting.end_time.hour:02d}:{meeting.end_time.minute:02d}', '%H:%M').strftime(
+        '%I:%M %p')
 
     # Create json "like" object
     meeting_json = {'title': meeting.title,
@@ -302,15 +304,12 @@ def getMeetingData(index_no):
                     'end': end_formatted,
                     'description': meeting.description}
 
-
     return jsonify(meeting_json)
-
 
 
 @app.route('/dashboard/createMeeting', methods=['GET', 'POST'])
 @login_required
 def createMeeting():
-
     form = CreateMeetingForm()
     if request.method == 'GET':
         times = []
@@ -318,14 +317,12 @@ def createMeeting():
             for j in range(0, 60, 15):
                 times.append(datetime.time(i, j).strftime("%I:%M %p"))
 
-        form.start_time.choices =[(i, times[i]) for i in range(0, len(times))]
-        form.end_time.choices =[(i, times[i]) for i in range(0, len(times))]
+        form.start_time.choices = [(i, times[i]) for i in range(0, len(times))]
+        form.end_time.choices = [(i, times[i]) for i in range(0, len(times))]
 
         return render_template('CreateMeeting.html', form=form)
 
     if request.method == 'POST':
-
-
         return redirect(url_for('dashboard'))
 
     return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
