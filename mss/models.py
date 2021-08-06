@@ -137,6 +137,7 @@ class Meeting(db.Model):
     title = db.Column(db.String(240), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.Text, nullable=True)
 
     def __repr__(self) -> str:
         return f'Meeting: {self.title}\n\tStart: {self.start_time}\n\tEnd: {self.end_time}\n\tRoom:{self.room_id}'

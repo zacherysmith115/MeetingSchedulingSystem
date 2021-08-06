@@ -5,20 +5,97 @@
         let calendar_element = document.getElementById('calendar');
         let calendar = new FullCalendar.Calendar(calendar_element, {
             initialView: 'timeGridWeek',
-            height: 850,
-            width: 600,
+            height: 600,
             nowIndicator: true,
             selectable: true,
+            eventBackgroundColor: 'blue',
+            customButtons: {
+                addButton: {
+                    text: 'Add',
+                    click: function(){
+                        //fetch('/dashboard/createMeeting')
+                        window.location.replace("{{url_for('createMeeting')}}")
+                    }
+                },
+
+                editButton: {
+                    text: 'Edit',
+                    click: function(){
+
+                    }
+                }
+
+
+            },
+            headerToolbar:{
+                left: 'title',
+                center: 'addButton editButton',
+                right: 'prev,next'
+
+            },
             events : [
                     {% for event in events %}
                     {
+                        id : '{{event.id}}',
                         title : '{{event.title}}',
                         start : '{{event.start}}',
+                        end : '{{event.end}}'
                     },
                     {% endfor %}
-                ] 
+                ], 
+                
+            eventClick: function(clickInfo){
+
+                var events = calendar.getEvents();
+                var length = events.length;
+                for(var i = 0; i < length; i++){
+                    if(events[i].backgroundColor == 'red'){
+                        events[i].setProp('backgroundColor', 'blue');
+                    }
+                    
+                }
+
+                if(clickInfo.event.backgroundColor == 'red'){
+                    clickInfo.event.setProp('backgroundColor', 'blue');
+                    var e = document.getElementById('meeting-content');
+                    e.style.display ='none';
+                }
+                else{
+                    clickInfo.event.setProp('backgroundColor', 'red');
+
+                    var index = clickInfo.event.id;
+                    fetch('/getmeetingdata/' + clickInfo.event.id)
+                        .then(response => response.json())
+                        .then(json => {
+                            console.log(json);
+                            console.log(json.title);
+                            
+                            document.getElementById('meeting-content').style.display = 'block';
+                            document.getElementById('meeting-title').innerHTML = json.title;
+                            document.getElementById('meeting-start').innerHTML = json.start;
+                            document.getElementById('meeting-end').innerHTML = json.end;
+
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+            }
+
             });
         calendar.render();
     </script>
+
+
+    <div class = 'row'>
+        <div class = 'col-md-12 justify-content-center'>
+            <div id='meeting-content' class='content' style='display: none'>
+                <p><b>Title: </b></p><p id='meeting-title'></p>
+                <p><b>Start: </b></p><p id='meeting-start'></p>
+                <p><b>End: </b></p><p id='meeting-end'></p>
+            </div>
+        </div>
+    </div>
+
 {% endblock content %}
 

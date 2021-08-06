@@ -1,6 +1,9 @@
+import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms import validators, ValidationError
+from wtforms import ValidationError
+from wtforms.fields.core import DateField, SelectField, TimeField
+from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from mss.models import User
 from mss import app, db
@@ -60,6 +63,14 @@ class AddRoomForm(FlaskForm):
     add_room = StringField('Add Room', validators=[DataRequired(), Length(max=20)])
     submit = SubmitField('Add Room Submit')
 
+class CreateMeetingForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(max=120)])
+    date = DateField('Date', format ='%m/%d/%y',validators=[DataRequired()])
+    start_time = SelectField('Start Time', coerce=str)
+    end_time =  SelectField('End Time', coerce=str)
+    description = TextAreaField('Description')
+
+    submit = SubmitField('Submit')
 
 class UpdateUserBill(FlaskForm):
     client_id = StringField('Client ID', validators=[DataRequired(), Length(max=20)])
