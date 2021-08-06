@@ -208,10 +208,24 @@ def adminTicketCenter():
 
 
 # Admin display meetings routing method
-@app.route('/AdminDisplayMeeetings', methods=['GET', 'POST'])
+@app.route('/AdminDisplayMeetings', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetings():
-    return render_template('AdminDisplayMeetings.html')
+    meetings = ['By Week', 'By Day', 'By Room', 'By Person', 'By Time Slot']
+    form = AdminSelectMeeting()
+    room = form.select_meeting.data
+    if room == 'By Week':
+        return render_template('AdminDisplayMeetingsByWeek.html')
+    if room == 'By Day':
+        return render_template('AdminDisplayMeetingsByDay.html')
+    if room == 'By Person':
+        return render_template('AdminDisplayMeetingsByPerson.html')
+    if room == 'By Room':
+        return render_template('AdminDisplayMeetingsByRoom.html')
+    if room == 'By Time Slot':
+        return render_template('AdminDisplayMeetingsByTime.html')
+    else:
+        return render_template('AdminDisplayMeetings.html', meetings=meetings, form=form)
 
 
 # Admin edit admin accounts routing method
@@ -287,9 +301,9 @@ def getMeetingData(index_no):
                     'start': start_formatted,
                     'end': end_formatted,
                     'description': meeting.description}
-    
 
-    return jsonify(meeting_json)  
+
+    return jsonify(meeting_json)
 
 
 
@@ -311,8 +325,8 @@ def createMeeting():
 
     if request.method == 'POST':
 
-        
+
         return redirect(url_for('dashboard'))
-    
+
     return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
                            bill=Bill.query.all())
