@@ -68,8 +68,13 @@ class CreateMeetingForm(FlaskForm):
     date = DateField('Date', format ='%m/%d/%y',validators=[DataRequired()])
     start_time = SelectField('Start Time', coerce=str)
     end_time =  SelectField('End Time', coerce=str)
-
-
     description = TextAreaField('Description')
 
     submit = SubmitField('Submit')
+
+class UpdateUserBill(FlaskForm):
+    client_id = StringField('Client ID', validators=[DataRequired(), Length(max=20)])
+    total = StringField('Update Total', validators=[DataRequired(), Length(max=20)])
+    date = StringField('Update Due Date', validators=[DataRequired(), Length(max=20)])
+    submit = SubmitField('Submit Billing Changes')
+

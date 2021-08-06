@@ -7,6 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy.orm.collections import InstrumentedList
 from sqlalchemy.sql import *
 
+
 # contains all the routing scripts to navigate the application #
 
 # Login routing method
@@ -236,15 +237,15 @@ def adminEditRooms():
     if addform.validate_on_submit():
         print(Room.query.filter_by(id=addform.add_room.data).first())
         # Check if room exists 
-        if(Room.query.filter_by(id=addform.add_room.data).first() is None):
-            room = Room(id=addform.add_room.data, special = False)
+        if Room.query.filter_by(id=addform.add_room.data).first() is None:
+            room = Room(id=addform.add_room.data, special=False)
             db.session.add(room)
             db.session.commit()
             flash('Room ' + addform.add_room.data + ' Added', 'success')
             return redirect(url_for('adminEditRooms'))
 
         else:
-            flash('Room ' +  addform.add_room.data + ' already exists! No changes made.', 'danger')
+            flash('Room ' + addform.add_room.data + ' already exists! No changes made.', 'danger')
             return redirect(url_for('adminEditRooms'))
 
     return render_template('AdminEditRooms.html', delform=delform, addform=addform, rooms=Room.query.all())
@@ -254,7 +255,21 @@ def adminEditRooms():
 @app.route('/AdminUpdateUserBill', methods=['GET', 'POST'])
 @login_required
 def adminUpdateUserBill():
-    return render_template('AdminUpdateUserBill.html')
+    form = UpdateUserBill()
+
+    if form.validate_on_submit():
+        total = Bill(id=form.total.data, special=False)
+        db.session.add(total)
+        db.session.commit()
+        flash('Bill updated')
+        return redirect(url_for('adminUpdateUserBill'))
+
+    #else:
+    #    flash('Error please try again')
+    #    return redirect(url_for('adminUpdateUserBill'))
+
+    return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
+                           bill=Bill.query.all())
 
 @app.route('/getmeetingdata/<index_no>', methods=['GET'])
 @login_required
@@ -299,3 +314,5 @@ def createMeeting():
         
         return redirect(url_for('dashboard'))
     
+    return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
+                           bill=Bill.query.all())
