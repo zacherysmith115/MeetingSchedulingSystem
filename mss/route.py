@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from flask import render_template, url_for, flash, redirect, request, jsonify
 from mss.forms import *
 from mss import app, db
@@ -297,22 +297,32 @@ def getMeetingData(index_no):
 @login_required
 def createMeeting():
 
-    form = CreateMeetingForm()
+    form = CreateMeetingForm(participants=[{'Email': 'zachery.smith@pss.com'}])
+
+    times = []
+    for i in range(7, 17):
+        for j in range(0, 60, 15):
+            times.append(time(i, j).strftime('%I:%M %p'))
+
+    form.start_time.choices = [times[i] for i in range(0, len(times))]
+    form.end_time.choices = [times[i] for i in range(0, len(times))]
+    
+    
     if request.method == 'GET':
-        times = []
-        for i in range(7, 17):
-            for j in range(0, 60, 15):
-                times.append(datetime.time(i, j).strftime("%I:%M %p"))
-
-        form.start_time.choices =[(i, times[i]) for i in range(0, len(times))]
-        form.end_time.choices =[(i, times[i]) for i in range(0, len(times))]
-
         return render_template('CreateMeeting.html', form=form)
 
+
     if request.method == 'POST':
+        for p in form.participants.data:
+            print(p)
+
+        if form.validate_on_submit():
+            for p in form.participants.data:
+                print(p)
+
+            flash('Meeting added to your calendar!', 'success')
+            return redirect(url_for('dashboard'))
 
         
-        return redirect(url_for('dashboard'))
+    return render_template('CreateMeeting.html', form=form)
     
-    return render_template('AdminUpdateUserBill.html', form=form, clients=Client.query.all(), user=User.query.all(),
-                           bill=Bill.query.all())

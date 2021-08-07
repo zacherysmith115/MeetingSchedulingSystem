@@ -1,10 +1,9 @@
-{% extends "Index.html" %}
+{% extends "Home.html" %}
 {% block content %}
 <div class="content">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-
             <div class="form-group">
                 {{form.title.label(class="form-control-label")}}
                 {% if form.title.errors %}
@@ -74,13 +73,77 @@
                 {{form.description(class="form-control")}}
                 {% endif %}
             </div>
+            
+            <div class="form-group">
+                <label class="form-control-label">Participants</label>
+                <div id = "participants-group">
+                    {% for participant in form.participants %}
+                        {{ participant.hidden_tag() }}
+                        {% if participant.email.errors %}
+                        {{participant.email(class="form-control form-control-sm is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in participant.email.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{participant.email(class="form-control form-control-sm")}} 
+                        {% endif %}    
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="button" id = "addButton" value = "+" 
+                onclick="addButtonClick()" class="btn btn-primary" style="float: right;"></input>
+                <input type="button" id = "subButton" value = "-" 
+                onclick="subButtonClick()" class="btn btn-primary" style="float: right;"></input>
+            </div>
+            <br><br>
+            <div class="form-group">
+                {{form.submit(class="btn btn-primary")}}
+            </div>
         </fieldset>
-
-        <div class="form-group">
-            {{form.submit(class="btn btn-primary")}}
-        </div>
-
     </form>
 </div>
+
+<script>
+    counter = 1;
+
+    function addButtonClick(){
+
+        var new_input_token = $(document.createElement('input'));
+        new_input_token.attr("id", 'participants-' + counter + '-csrf_token');
+        new_input_token.attr("name", 'participants-' + counter + '-csrf_token');
+        new_input_token.attr("type", "hidden");
+        new_input_token.attr("value", ''+document.getElementById("participants-0-csrf_token").value);
+ 
+        var new_input = $(document.createElement('input'));
+        new_input.attr("class", "form-control form-control-sm");
+        new_input.attr("id", 'participants-' + counter + '-email');
+        new_input.attr("name", 'participants-' + counter + '-email');
+        new_input.attr("type", "text");
+        new_input.attr("value", "");
+
+
+        new_input_token.appendTo(document.getElementById('participants-group'))
+        new_input.appendTo(document.getElementById('participants-group'));
+        counter++;
+    }
+
+    function subButtonClick(){
+        if(counter == 1){
+            alert("Must have at least participant!")
+            return 
+        }
+
+        var el = document.getElementById('participants-' + (counter--) +'-csrf_token');
+        el.parentNode.removeChild(el);
+        el = document.getElementById('participants-' + (counter--) + '-email')
+        el.parentNode.removeChild(el);
+    }
+
+</script>
+
 
 {% endblock content %}
