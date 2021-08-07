@@ -60,7 +60,8 @@ m2 = Meeting(creator_id=sarah.id, creator=sarah, participants=[john, james, kell
 
 m3_start_time = datetime.datetime(year=2021, month=8, day=13, hour=14)
 m3_end_time = datetime.datetime(year=2021, month=8, day=13, hour=15)
-m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the weekend already'
+m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the ' \
+           'weekend already'
 m3 = Meeting(creator_id=james.id, creator=james, participants=[john, james, kelly], title='Friday afternoon meeting',
              room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time, description = m3_descr)
 

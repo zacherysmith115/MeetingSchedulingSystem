@@ -1,4 +1,48 @@
 {% extends "AdminHome.html" %}
 {% block content %}
 
+    <div class = "content">
+        <div class="text-center">
+            <h3>Display Meetings By Week</h3>
+        </div>
+        <br>
+        <form action="#" method="POST">
+            {{ form.dt(class_='datepicker') }}
+            {{ form.hidden_tag() }}
+            <input type="submit"/>
+        </form>
+
+
+
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Room #</th>
+                <th scope="col">Start Date & Time</th>
+                <th scope="col">End Date & Time</th>
+                <th scope="col">Creator ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for meeting in meetings %}
+              <tr>
+                <th scope="row">{{meeting.room_id}}</th>
+                <td>{{meeting.start_time}}</td>
+                <td>{{meeting.end_time}}</td>
+                <td>{{meeting.creator}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+
+
+
+
+
+    <a href="AdminDisplayMeetings">Return To Display Meetings Selection Page</a>
+    </div>
 {% endblock content %}

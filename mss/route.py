@@ -1,5 +1,6 @@
-from datetime import datetime
-from flask import render_template, url_for, flash, redirect, request, jsonify
+from datetime import datetime, date, timedelta
+from flask import render_template, url_for, flash, redirect, request, jsonify, Flask
+from flask_wtf import Form
 from mss.forms import *
 from mss import app, db
 from mss.models import *
@@ -232,35 +233,44 @@ def adminDisplayMeetings():
 @app.route('/AdminDisplayMeetingsByWeek', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByWeek():
-    return render_template('AdminDisplayMeetingsByWeek.html')
+    form = AdminSelectMeetingByWeek()
+    today = date.today()
+    delta = datetime.timedelta(days=7)
+    meetings = Meeting.query.all()
+    if form.validate_on_submit():
+        selected_week = form.dt.data.strftime('%Y-%m-%d')
+        end_time = datetime.datetime.strptime(selected_week, '%Y-%m-%d') + delta
+        meetings = Meeting.query.filter(and_(Meeting.start_time >= selected_week, Meeting.start_time <= end_time))
+
+    return render_template('AdminDisplayMeetingsByWeek.html', meetings=meetings, today=today, form=form)
 
 
 # Admin Display Meetings By Day
 @app.route('/AdminDisplayMeetingsByDay', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByDay():
-    return render_template('AdminDisplayMeetingsByDay.html')
+    return render_template('AdminDisplayMeetingsByDay.html', meetings=Meeting.query.all())
 
 
 # Admin Display Meetings By Person
 @app.route('/AdminDisplayMeetingsByPerson', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByPerson():
-    return render_template('AdminDisplayMeetingsByPerson.html')
+    return render_template('AdminDisplayMeetingsByPerson.html', meetings=Meeting.query.all())
 
 
 # Admin Display Meetings By Room
 @app.route('/AdminDisplayMeetingsByRoom', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByRoom():
-    return render_template('AdminDisplayMeetingsByRoom.html')
+    return render_template('AdminDisplayMeetingsByRoom.html', meetings=Meeting.query.all())
 
 
 # Admin Display Meetings By Time
 @app.route('/AdminDisplayMeetingsByTime', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByTime():
-    return render_template('AdminDisplayMeetingsByTime.html')
+    return render_template('AdminDisplayMeetingsByTime.html', meetings=Meeting.query.all())
 
 
 # Admin edit admin accounts routing method

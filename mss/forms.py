@@ -1,11 +1,13 @@
 import datetime
-from flask_wtf import FlaskForm
+from wtforms.fields.html5 import DateField as DateFieldHTML5
+from flask_wtf import FlaskForm, Form
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms import ValidationError
 from wtforms.fields.core import DateField, SelectField, TimeField
 from wtforms.fields.simple import TextAreaField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from mss.models import User
+
 from mss import app, db
 from sqlalchemy import inspect
 
@@ -84,3 +86,7 @@ class UpdateUserBill(FlaskForm):
 class AdminSelectMeeting(FlaskForm):
     select_meeting = SelectField('Please Select Meetings to Display', coerce=str)
     submit = SubmitField('Display Meetings')
+
+
+class AdminSelectMeetingByWeek(FlaskForm):
+    dt = DateFieldHTML5('DatePicker', format='%Y-%m-%d')
