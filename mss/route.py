@@ -1,5 +1,5 @@
 from datetime import datetime, time, date, timedelta
-from flask import render_template, url_for, flash, redirect, request, jsonify, Flask
+from flask import render_template, url_for, flash, redirect, request, jsonify, Flask, session
 from flask_wtf import Form
 from mss.forms import *
 from mss import app, db
@@ -137,7 +137,8 @@ def editAccount():
 @login_required
 def addPaymentInfo():
     form = PaymentInfoForm()
-    card = current_user.card
+    card = current_user.card[0]
+    
 
     # If already has a card populate some of the information
     if not form.validate_on_submit():
@@ -433,11 +434,17 @@ def createMeeting():
         room = Room.query.filter_by(id=form.room.data).first()
 
         meeting = Meeting(creator_id=current_user.id, creator=current_user,
+<<<<<<< HEAD
                           title=form.title.data, start_time=start_time, end_time=end_time,
                           description=form.description.data, room_id=room.id,
                           room=room, participants=participants)
 
         print(type(meeting.creator_id))
+=======
+                        title=form.title.data, start_time=start_time, end_time=end_time,
+                        description=form.description.data, room_id=room.id,
+                        room=room, participants=participants)
+>>>>>>> zachs_branch
 
         db.session.add(meeting)
         db.session.commit()
@@ -446,3 +453,45 @@ def createMeeting():
         return redirect(url_for('dashboard'))
 
     return render_template('CreateMeeting.html', form=form)
+<<<<<<< HEAD
+=======
+
+@app.route('/dashboard/editmeeting/<id>', methods=['GET'])
+@login_required
+def editmeetingredirect(id):
+    session['messages'] = id  
+    return redirect(url_for('editmeeting'))
+
+@app.route('/dashboard/editmeeting', methods=['GET', 'POST'])
+@login_required
+def editmeeting():
+
+    # pull meeting id from cookie
+    id = session['messages']
+    meeting = Meeting.query.filter_by(id=id).first()
+
+    form = CreateMeetingForm(participants = meeting.participants)
+    times = []
+    for i in range(7, 17):
+        for j in range(0, 60, 15):
+            times.append(time(i, j).strftime('%I:%M %p'))
+
+    form.start_time.choices = [times[i] for i in range(0, len(times))]
+    form.end_time.choices = [times[i] for i in range(0, len(times))]
+
+    rooms = []
+    for room in Room.query.all():
+        rooms.append(room.id)
+
+    form.room.choices = rooms
+
+    if request.method == 'GET':
+        form.title.data = meeting.title
+        form.date.data = meeting.start_time.date()
+        # add preselected time?
+        form.description.data = meeting.description
+        return render_template('CreateMeeting.html', form=form)
+
+
+    return render_template('CreateMeeting.html', form=form)
+>>>>>>> zachs_branch
