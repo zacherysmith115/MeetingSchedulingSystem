@@ -119,6 +119,12 @@ class AdminSelectMeetingByWeek(FlaskForm):
 
 class AdminSelectMeetingByDay(FlaskForm):
     dt = DateFieldHTML5('DatePicker', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])
+    dt = DateFieldHTML5('Select Start of Week', format='%Y-%m-%d', default=datetime.now(),
+                        validators=[DataRequired()])
+
+
+class AdminSelectMeetingByDay(FlaskForm):
+    dt = DateFieldHTML5('Select Day', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])
 
 
 def roomQuery():

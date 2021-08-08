@@ -373,12 +373,13 @@ def getMeetingData(index_no):
                     'description': meeting.description}
 
     return jsonify(meeting_json)
-    
+
+
 @app.route('/getroomcost/<room_no>', methods=['GET'])
 @login_required
 def getRoomCost(room_no):
-    room = Room.query.filter_by(id = room_no).first()
-    
+    room = Room.query.filter_by(id=room_no).first()
+
     if room.special:
         cost = {'cost': '$' + str(room.cost)}
     else:
@@ -400,32 +401,30 @@ def createMeeting():
 
     form.start_time.choices = [times[i] for i in range(0, len(times))]
     form.end_time.choices = [times[i] for i in range(0, len(times))]
-    
+
     # build selectable rooms for the form
     rooms = []
     for room in Room.query.all():
         rooms.append(room.id)
-    
+
     form.room.choices = rooms
 
     if request.method == 'POST' and form.validate_on_submit():
-        
-        participants=[]
-        for entry in form.participants.entries:
-           
-            participants.append(Client.query.filter_by(email=entry.email.data).first())
 
+        participants = []
+        for entry in form.participants.entries:
+            participants.append(Client.query.filter_by(email=entry.email.data).first())
 
         start_time = datetime.combine(form.date.data, datetime.strptime(form.start_time.data, "%I:%M %p").time())
         end_time = datetime.combine(form.date.data, datetime.strptime(form.end_time.data, "%I:%M %p").time())
 
         room = Room.query.filter_by(id=form.room.data).first()
-        
+
         meeting = Meeting(creator_id=current_user.id, creator=current_user,
-                        title=form.title.data, start_time=start_time, end_time=end_time,
-                        description=form.description.data, room_id=room.id,
-                        room=room, participants=participants)
-        
+                          title=form.title.data, start_time=start_time, end_time=end_time,
+                          description=form.description.data, room_id=room.id,
+                          room=room, participants=participants)
+
         print(type(meeting.creator_id))
 
         db.session.add(meeting)
@@ -434,6 +433,4 @@ def createMeeting():
         flash('Meeting added to your calendar!', 'success')
         return redirect(url_for('dashboard'))
 
-        
     return render_template('CreateMeeting.html', form=form)
-    
