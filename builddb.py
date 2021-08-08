@@ -60,14 +60,26 @@ m2 = Meeting(creator_id=sarah.id, creator=sarah, participants=[john, james, kell
 
 m3_start_time = datetime.datetime(year=2021, month=8, day=13, hour=14)
 m3_end_time = datetime.datetime(year=2021, month=8, day=13, hour=15)
+<<<<<<< HEAD
 m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the ' \
            'weekend already'
 m3 = Meeting(creator_id=james.id, creator=james, participants=[john, james, kelly], title='Friday afternoon meeting',
+=======
+m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the weekend already'
+m3 = Meeting(creator_id=james.id, creator=james, participants=[john, sarah, kelly], title='Friday afternoon meeting',
+>>>>>>> zachs_branch
              room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time, description = m3_descr)
+
+m4_start_time = datetime.datetime(year=2021, month=8, day=10, hour=9)
+m4_end_time = datetime.datetime(year=2021, month=8, day=10, hour=10)
+m4_descr = 'Trying to figure out whats wrong with my db relationships :['
+m4 = Meeting(creator_id=james.id, creator=james, participants=[john, sarah, kelly], title='Debugging my system',
+             room_id=room_103.id, room=room_103, start_time=m4_start_time, end_time=m4_end_time, description = m4_descr)
 
 db.session.add(m1)
 db.session.add(m2)
 db.session.add(m3)
+db.session.add(m4)
 
 # commit changes
 db.session.commit()
