@@ -434,17 +434,9 @@ def createMeeting():
         room = Room.query.filter_by(id=form.room.data).first()
 
         meeting = Meeting(creator_id=current_user.id, creator=current_user,
-<<<<<<< HEAD
-                          title=form.title.data, start_time=start_time, end_time=end_time,
-                          description=form.description.data, room_id=room.id,
-                          room=room, participants=participants)
-
-        print(type(meeting.creator_id))
-=======
                         title=form.title.data, start_time=start_time, end_time=end_time,
                         description=form.description.data, room_id=room.id,
                         room=room, participants=participants)
->>>>>>> zachs_branch
 
         db.session.add(meeting)
         db.session.commit()
@@ -453,8 +445,6 @@ def createMeeting():
         return redirect(url_for('dashboard'))
 
     return render_template('CreateMeeting.html', form=form)
-<<<<<<< HEAD
-=======
 
 @app.route('/dashboard/editmeeting/<id>', methods=['GET'])
 @login_required
@@ -494,4 +484,3 @@ def editmeeting():
 
 
     return render_template('CreateMeeting.html', form=form)
->>>>>>> zachs_branch
