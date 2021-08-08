@@ -39,7 +39,7 @@ db.session.add(kellys_card)
 room_101 = Room(id=101)
 room_102 = Room(id=102)
 room_103 = Room(id=103)
-room_200 = Room(id=200, special=True, cost = 50)
+room_200 = Room(id=200, special=True, cost=50)
 db.session.add(room_101)
 db.session.add(room_102)
 db.session.add(room_103)
@@ -50,31 +50,27 @@ m1_start_time = datetime.datetime(year=2021, month=8, day=9, hour=8)
 m1_end_time = datetime.datetime(year=2021, month=8, day=9, hour=9)
 m1_descr = 'To review the upcoming tasks for the week, and plan out who will be handling what.'
 m1 = Meeting(creator_id=john.id, creator=john, participants=[sarah, james, kelly], title='Monday morning meeting',
-             room_id=room_101.id, room=room_101, start_time=m1_start_time, end_time=m1_end_time, description = m1_descr)
+             room_id=room_101.id, room=room_101, start_time=m1_start_time, end_time=m1_end_time, description=m1_descr)
 
 m2_start_time = datetime.datetime(year=2021, month=8, day=11, hour=12)
 m2_end_time = datetime.datetime(year=2021, month=8, day=11, hour=13)
 m2_descr = 'Recurring lunch meeting at the dining area, feel free to forward to anyone else!'
 m2 = Meeting(creator_id=sarah.id, creator=sarah, participants=[john, james, kelly], title='Wednesday lunch',
-             room_id=room_102.id, room=room_102, start_time=m2_start_time, end_time=m2_end_time, description = m2_descr)
+             room_id=room_102.id, room=room_102, start_time=m2_start_time, end_time=m2_end_time, description=m2_descr)
 
 m3_start_time = datetime.datetime(year=2021, month=8, day=13, hour=14)
 m3_end_time = datetime.datetime(year=2021, month=8, day=13, hour=15)
-<<<<<<< HEAD
-m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the ' \
-           'weekend already'
-m3 = Meeting(creator_id=james.id, creator=james, participants=[john, james, kelly], title='Friday afternoon meeting',
-=======
-m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the weekend already'
+
+m3_descr = 'That last meeting of the week that everyone hates on James for making. I just want to start the weekend ' \
+           'already'
 m3 = Meeting(creator_id=james.id, creator=james, participants=[john, sarah, kelly], title='Friday afternoon meeting',
->>>>>>> zachs_branch
-             room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time, description = m3_descr)
+             room_id=room_103.id, room=room_103, start_time=m3_start_time, end_time=m3_end_time, description=m3_descr)
 
 m4_start_time = datetime.datetime(year=2021, month=8, day=10, hour=9)
 m4_end_time = datetime.datetime(year=2021, month=8, day=10, hour=10)
 m4_descr = 'Trying to figure out whats wrong with my db relationships :['
 m4 = Meeting(creator_id=james.id, creator=james, participants=[john, sarah, kelly], title='Debugging my system',
-             room_id=room_103.id, room=room_103, start_time=m4_start_time, end_time=m4_end_time, description = m4_descr)
+             room_id=room_103.id, room=room_103, start_time=m4_start_time, end_time=m4_end_time, description=m4_descr)
 
 db.session.add(m1)
 db.session.add(m2)

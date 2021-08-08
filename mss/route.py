@@ -92,7 +92,19 @@ def dashboard():
 @app.route('/MyMeetings', methods=['GET', 'POST'])
 @login_required
 def myMeetings():
-    return render_template('MyMeetings.html')
+    form = AdminSelectMeetingByPerson()
+    meetings = []
+    if type(current_user.meetings_participant) is InstrumentedList:
+        meetings.extend(current_user.meetings_participant)
+    else:
+        meetings.append(current_user.meetings_participant)
+
+    if type(current_user.meetings_creator) is InstrumentedList:
+        meetings.extend(current_user.meetings_creator)
+    else:
+        meetings.append(current_user.meetings_creator)
+
+    return render_template('MyMeetings.html', form=form, meetings=meetings)
 
 
 # Client edit account routing method
