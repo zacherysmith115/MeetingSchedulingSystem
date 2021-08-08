@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask_wtf import FlaskForm
+from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms import ValidationError
 from wtforms import validators
@@ -73,9 +74,8 @@ class ParticipantForm(FlaskForm):
         if not client:
             raise ValidationError('Participant must have an account!')
 
-        class Meta:
-        # No need for csrf token in this child form
-            csrf = False
+        if current_user.email == client.email:
+            raise ValidationError('Cant invite yourself!')
 
 class CreateMeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=120)])
@@ -83,6 +83,7 @@ class CreateMeetingForm(FlaskForm):
     start_time = SelectField('Start Time', coerce=str)
     end_time =  SelectField('End Time',  coerce=str)
     description = TextAreaField('Description')
+    room = SelectField('Room', coerce=str)
     participants = FieldList(FormField(ParticipantForm), min_entries=1)
 
     submit = SubmitField('Submit')

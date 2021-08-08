@@ -73,6 +73,25 @@
                 {{form.description(class="form-control")}}
                 {% endif %}
             </div>
+
+            <div class="form-group">
+                {{form.room.label(class="form-control-label")}}
+                {% if form.room.errors %}
+                {{form.room(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.room.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.room(class="form-control")}}
+                {% endif %}
+            </div>
+
+            <div class = "form-group">
+                <label id = "room-cost-label" class="form-control-label">Cost</label>
+                <input id="room-cost" class = "form-control" type="text" value="" readonly>
+            </div>
             
             <div class="form-group">
                 <label class="form-control-label">Participants</label>
@@ -109,6 +128,19 @@
 
 <script>
     counter = 1;
+    var room_select = document.getElementById('room');
+    room_select.onchange = function(){
+        room = room_select.value;
+
+        fetch('/getroomcost/' + room)
+            .then(response => response.json())
+            .then(json => {
+                document.getElementById('room-cost').value = json.cost
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
 
     function addButtonClick(){
 
@@ -129,6 +161,8 @@
         new_input_token.appendTo(document.getElementById('participants-group'))
         new_input.appendTo(document.getElementById('participants-group'));
         counter++;
+        console.log(counter)
+
     }
 
     function subButtonClick(){
@@ -137,11 +171,14 @@
             return 
         }
 
-        var el = document.getElementById('participants-' + (counter--) +'-csrf_token');
+        var el = document.getElementById('participants-' + (counter-1) +'-csrf_token');
         el.parentNode.removeChild(el);
-        el = document.getElementById('participants-' + (counter--) + '-email')
+
+        var el = document.getElementById('participants-' + (counter-1) + '-email')
         el.parentNode.removeChild(el);
+        counter--;
     }
+
 
 </script>
 

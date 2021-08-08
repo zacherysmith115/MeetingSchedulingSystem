@@ -48,13 +48,13 @@ class Client(User):
     bills = db.relationship('Bill', back_populates='client')
 
     # one to many relationship with meeting
-    meetings_creator = db.relationship('Meeting', back_populates='creator', uselist=False)
+    meetings_creator = db.relationship('Meeting', back_populates='creator')
 
     # many to many relationship with meeting
     meetings_participant = db.relationship('Meeting', secondary=participation_table, back_populates='participants')
 
     # one to many relationship with ticket
-    tickets = db.relationship('Ticket', back_populates='creator', uselist=False)
+    tickets = db.relationship('Ticket', back_populates='creator')
 
     __mapper_args__ = {
         'polymorphic_identity': 'client'
@@ -71,7 +71,7 @@ class Admin(User):
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
     # one to many relationship with ticket
-    tickets = db.relationship('Ticket', back_populates='admin', uselist=False)
+    tickets = db.relationship('Ticket', back_populates='admin')
 
     __mapper_args__ = {
         'polymorphic_identity': 'admin'
@@ -89,7 +89,7 @@ class Card(db.Model):
 
     # one to one relationship with client
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
-    client = db.relationship('Client', backref=db.backref('card', uselist=False))
+    client = db.relationship('Client', backref=db.backref('card'))
 
     number = db.Column(db.String(16), nullable=False)
     name = db.Column(db.String(60), nullable=False)
