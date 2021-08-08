@@ -347,6 +347,7 @@ def createMeeting():
                         title=form.title.data, start_time=start_time, end_time=end_time,
                         description=form.description.data, room_id=room.id,
                         room=room, participants=participants)
+        
         print(type(meeting.creator_id))
 
         db.session.add(meeting)

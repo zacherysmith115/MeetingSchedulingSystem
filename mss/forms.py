@@ -83,7 +83,7 @@ class CreateMeetingForm(FlaskForm):
     start_time = SelectField('Start Time', coerce=str)
     end_time =  SelectField('End Time',  coerce=str)
     description = TextAreaField('Description')
-    room = SelectField('Room', coerce=str)
+    room = SelectField('Room', coerce=int)
     participants = FieldList(FormField(ParticipantForm), min_entries=1)
 
     submit = SubmitField('Submit')
