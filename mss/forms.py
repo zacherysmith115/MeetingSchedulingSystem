@@ -69,23 +69,25 @@ class AddRoomForm(FlaskForm):
     add_room = StringField('Add Room', validators=[DataRequired(), Length(max=20)])
     submit = SubmitField('Add Room Submit')
 
+
 class ParticipantForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
 
     def validate_email(self, email):
         client = Client.query.filter_by(email=email.data).first()
-        
+
         if not client:
             raise ValidationError('Participant must have an account!')
 
         if current_user.email == client.email:
             raise ValidationError('Cant invite yourself!')
 
+
 class CreateMeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=120)])
     date = DateField('Date', format='%m/%d/%y', validators=[DataRequired()])
     start_time = SelectField('Start Time', coerce=str)
-    end_time =  SelectField('End Time',  coerce=str)
+    end_time = SelectField('End Time', coerce=str)
     description = TextAreaField('Description')
     room = SelectField('Room', coerce=int)
     participants = FieldList(FormField(ParticipantForm), min_entries=1)
