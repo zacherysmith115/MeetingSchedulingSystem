@@ -234,43 +234,66 @@ def adminDisplayMeetings():
 @login_required
 def adminDisplayMeetingsByWeek():
     form = AdminSelectMeetingByWeek()
-    today = date.today()
     delta = datetime.timedelta(days=7)
-    meetings = Meeting.query.all()
+    meetings = Meeting.query.filter(None)
     if form.validate_on_submit():
         selected_week = form.dt.data.strftime('%Y-%m-%d')
         end_time = datetime.datetime.strptime(selected_week, '%Y-%m-%d') + delta
         meetings = Meeting.query.filter(and_(Meeting.start_time >= selected_week, Meeting.start_time <= end_time))
 
-    return render_template('AdminDisplayMeetingsByWeek.html', meetings=meetings, today=today, form=form)
+    return render_template('AdminDisplayMeetingsByWeek.html', meetings=meetings, form=form)
 
 
 # Admin Display Meetings By Day
 @app.route('/AdminDisplayMeetingsByDay', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByDay():
-    return render_template('AdminDisplayMeetingsByDay.html', meetings=Meeting.query.all())
+    form = AdminSelectMeetingByDay()
+    delta = datetime.timedelta(days=1)
+    meetings = Meeting.query.filter(None)
+    if form.validate_on_submit():
+        selected_week = form.dt.data.strftime('%Y-%m-%d')
+        end_time = datetime.datetime.strptime(selected_week, '%Y-%m-%d') + delta
+        meetings = Meeting.query.filter(and_(Meeting.start_time >= selected_week, Meeting.start_time <= end_time))
+
+    return render_template('AdminDisplayMeetingsByDay.html', meetings=meetings, form=form)
 
 
 # Admin Display Meetings By Person
 @app.route('/AdminDisplayMeetingsByPerson', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByPerson():
-    return render_template('AdminDisplayMeetingsByPerson.html', meetings=Meeting.query.all())
+    form = AdminSelectMeetingByPerson()
+    meetings = Meeting.query.filter(None)
+    if form.validate_on_submit():
+        meetings = Meeting.query.filter(Meeting.creator == form.select_person.data)
+    return render_template('AdminDisplayMeetingsByPerson.html', form=form, meetings=meetings)
 
 
 # Admin Display Meetings By Room
 @app.route('/AdminDisplayMeetingsByRoom', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByRoom():
-    return render_template('AdminDisplayMeetingsByRoom.html', meetings=Meeting.query.all())
+    form = AdminSelectMeetingByRoom()
+    meetings = Meeting.query.filter(None)
+    if form.validate_on_submit():
+        meetings = Meeting.query.filter(Meeting.room == form.select_room.data)
+    return render_template('AdminDisplayMeetingsByRoom.html', form=form, meetings=meetings)
 
 
 # Admin Display Meetings By Time
 @app.route('/AdminDisplayMeetingsByTime', methods=['GET', 'POST'])
 @login_required
 def adminDisplayMeetingsByTime():
-    return render_template('AdminDisplayMeetingsByTime.html', meetings=Meeting.query.all())
+    form = AdminSelectMeetingByTime()
+    meetings = Meeting.query.filter(None)
+    if form.validate_on_submit():
+        start = datetime.datetime.combine(form.dt_start_date.data,
+                                          form.dt_start_time.data).strftime('%Y-%m-%d %H:%M:00')
+        end = datetime.datetime.combine(form.dt_end_date.data,
+                                        form.dt_end_time.data).strftime('%Y-%m-%d %H:%M:00')
+        meetings = Meeting.query.filter(and_(Meeting.start_time >= start, Meeting.start_time <= end))
+    return render_template('AdminDisplayMeetingsByTime.html', meetings=meetings, form=form)
 
 
 # Admin edit admin accounts routing method

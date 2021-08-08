@@ -1,6 +1,17 @@
 {% extends "AdminHome.html" %}
 {% block content %}
+
     <div class = "content">
+        <div class="text-center">
+            <h3>Display Meetings By Day</h3>
+        </div>
+        <br>
+        <form action="#" method="POST">
+            {{ form.dt(class_='datepicker') }}
+            {{ form.hidden_tag() }}
+            <input type="submit"/>
+        </form>
+
         <table class="table table-striped">
             <thead>
               <tr>
@@ -21,6 +32,7 @@
               {% endfor %}
             </tbody>
         </table>
+
     <a href="AdminDisplayMeetings">Return To Display Meetings Selection Page</a>
     </div>
 {% endblock content %}
