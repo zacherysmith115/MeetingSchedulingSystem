@@ -20,6 +20,31 @@
                 editButton: {
                     text: 'Edit',
                     click: function(){
+                        
+                    var events = calendar.getEvents();
+                    var length = events.length;
+                    var id = -1;
+                    for(var i = 0; i < length; i++){
+                        if(events[i].backgroundColor == 'red'){
+                            id = events[i].id;
+                        }
+                    }
+
+                    if(id == -1){
+                        alert('Please make a selection first!');
+                        return
+                    }
+                    
+                    fetch('/dashboard/editmeeting/' + id, {method: 'GET', redirect: 'follow'})
+                        .then(response => {
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+
 
                     }
                 }
@@ -66,8 +91,6 @@
                     fetch('/getmeetingdata/' + clickInfo.event.id)
                         .then(response => response.json())
                         .then(json => {
-                            console.log(json);
-                            console.log(json.title);
                             
                             document.getElementById('meeting-content').style.display = 'block';
                             document.getElementById('meeting-title').innerHTML = json.title;
