@@ -91,11 +91,11 @@ class AdminSelectMeeting(FlaskForm):
 
 
 class AdminSelectMeetingByWeek(FlaskForm):
-    dt = DateFieldHTML5('DatePicker', format='%Y-%m-%d', default=datetime.datetime.now(), validators=[DataRequired()])
+    dt = DateFieldHTML5('Select Start of Week', format='%Y-%m-%d', default=datetime.datetime.now(), validators=[DataRequired()])
 
 
 class AdminSelectMeetingByDay(FlaskForm):
-    dt = DateFieldHTML5('DatePicker', format='%Y-%m-%d', default=datetime.datetime.now(), validators=[DataRequired()])
+    dt = DateFieldHTML5('Select Day', format='%Y-%m-%d', default=datetime.datetime.now(), validators=[DataRequired()])
 
 
 def roomQuery():
@@ -103,7 +103,7 @@ def roomQuery():
 
 
 class AdminSelectMeetingByRoom(FlaskForm):
-    select_room = QuerySelectField(query_factory=roomQuery, allow_blank=True)
+    select_room = QuerySelectField('Select Room', query_factory=roomQuery, allow_blank=True)
 
 
 def userQuery():

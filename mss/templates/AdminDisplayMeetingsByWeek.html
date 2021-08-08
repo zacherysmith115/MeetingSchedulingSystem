@@ -7,7 +7,8 @@
         </div>
         <br>
         <form action="#" method="POST">
-            {{ form.dt(class_='datepicker') }}
+            {{ form.dt.label(class="form-control-label") }}<br>
+            {{ form.dt(class_='Choose Start of Week') }}
             {{ form.hidden_tag() }}
             <input type="submit"/>
         </form>
