@@ -234,11 +234,11 @@ def adminDisplayMeetings():
 @login_required
 def adminDisplayMeetingsByWeek():
     form = AdminSelectMeetingByWeek()
-    delta = datetime.timedelta(days=7)
+    delta = timedelta(days=7)
     meetings = Meeting.query.filter(None)
     if form.validate_on_submit():
         selected_week = form.dt.data.strftime('%Y-%m-%d')
-        end_time = datetime.datetime.strptime(selected_week, '%Y-%m-%d') + delta
+        end_time = datetime.strptime(selected_week, '%Y-%m-%d') + delta
         meetings = Meeting.query.filter(and_(Meeting.start_time >= selected_week, Meeting.start_time <= end_time))
 
     return render_template('AdminDisplayMeetingsByWeek.html', meetings=meetings, form=form)
@@ -249,11 +249,11 @@ def adminDisplayMeetingsByWeek():
 @login_required
 def adminDisplayMeetingsByDay():
     form = AdminSelectMeetingByDay()
-    delta = datetime.timedelta(days=1)
+    delta = timedelta(days=1)
     meetings = Meeting.query.filter(None)
     if form.validate_on_submit():
         selected_week = form.dt.data.strftime('%Y-%m-%d')
-        end_time = datetime.datetime.strptime(selected_week, '%Y-%m-%d') + delta
+        end_time = datetime.strptime(selected_week, '%Y-%m-%d') + delta
         meetings = Meeting.query.filter(and_(Meeting.start_time >= selected_week, Meeting.start_time <= end_time))
 
     return render_template('AdminDisplayMeetingsByDay.html', meetings=meetings, form=form)
@@ -288,9 +288,9 @@ def adminDisplayMeetingsByTime():
     form = AdminSelectMeetingByTime()
     meetings = Meeting.query.filter(None)
     if form.validate_on_submit():
-        start = datetime.datetime.combine(form.dt_start_date.data,
+        start = datetime.combine(form.dt_start_date.data,
                                           form.dt_start_time.data).strftime('%Y-%m-%d %H:%M:00')
-        end = datetime.datetime.combine(form.dt_end_date.data,
+        end = datetime.combine(form.dt_end_date.data,
                                         form.dt_end_time.data).strftime('%Y-%m-%d %H:%M:00')
         meetings = Meeting.query.filter(and_(Meeting.start_time >= start, Meeting.start_time <= end))
     return render_template('AdminDisplayMeetingsByTime.html', meetings=meetings, form=form)
