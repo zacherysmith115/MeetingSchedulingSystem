@@ -14,7 +14,7 @@ db.session.add(Admin(first_name='Zachery', last_name='Smith', email='zachery.smi
 db.session.add(Admin(first_name='Sandy', last_name='Lee', email='sandy.lee@pss.com',
                      password=pwd_context.hash('password')))
 db.session.add(Admin(first_name='Hope', last_name='Fisher', email='hope.fisher@pss.com',
-                     password=pwd_context.hash('password')))
+                     password=pwd_context.hash('T0ugHP@5SWoRd')))
 
 # populate client data
 john = Client(first_name='John', last_name='Doe', email='john.doe@pss.com',
