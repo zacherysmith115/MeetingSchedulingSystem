@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime
+from mss.Meeting.MeetingForms import CreateMeetingForm
 from sqlalchemy.sql.elements import and_
 from sqlalchemy.orm.collections import InstrumentedList
 
@@ -86,6 +87,7 @@ class MeetingController():
 
         return meeting_events
 
+
     # Helper function to build the meeting list to pass to dashboard
     def buildMeetingListCreator(self, user: "Client") -> list:
         meetings = []
@@ -96,7 +98,9 @@ class MeetingController():
             meetings.append(user.meetings_creator)
 
         return meetings
-    
+
+
+    # Helfper function to build the meeting list to pass to dashboard
     def buildMeeetingListParticipant(self, user: "Client") -> list:
         meetings = []
         if type(user.meetings_participant) is InstrumentedList:
@@ -107,4 +111,100 @@ class MeetingController():
         return meetings
 
 
+    # Helper function to create a meeting and add it to the db 
+    def createMeeting(self, user: "Client", form: "CreateMeetingForm") -> bool:
         
+        try:
+            participants = []
+            for entry in form.participants.entries:
+                participants.append(Client.query.filter_by(email=entry.email.data).first())
+            
+            start_time = datetime.combine(form.date.data, form.start_time.data)
+            end_time = datetime.combine(form.date.data, form.end_time.data)
+            
+
+            room = form.room.data
+
+            meeting = Meeting(creator_id=user.id, creator=user,
+                            title=form.title.data, start_time=start_time, end_time=end_time,
+                            description=form.description.data, room_id=room.id,
+                            room=room, participants=participants)
+        
+            self.db.session.add(meeting)
+            self.db.session.commit()
+
+            return True
+
+        except:
+            return False
+
+
+    # Helpr fucntion to edit a meeting and record the changes to the db
+    def editMeeting(self, id: "int", form: "CreateMeetingForm") -> bool:
+        
+        meeting = Meeting.query.filter_by(id=id).first()
+
+        form = CreateMeetingForm(participants = meeting.participants)
+        meeting.title = form.title.data
+        meeting.start_time = datetime.combine(form.date.data, form.start_time.data)
+        meeting.end_time = datetime.combine(form.date.data, form.end_time.data)
+        meeting.description = form.description.data
+        print(form.room.data)
+        meeting.room = form.room.data
+        
+        try:
+            self.db.session.commit()
+            return True
+        except:
+            return False
+
+
+    # Helper function to build edit meeting form 
+    def buildEditMeetingForm(self, id: "int") -> "CreateMeetingForm":
+
+        meeting = Meeting.query.filter_by(id=id).first()
+        if meeting:
+            form = CreateMeetingForm(participants = meeting.participants)
+            form.title.data = meeting.title
+            form.date.data = meeting.start_time.date()
+            form.start_time.data = meeting.start_time
+            form.end_time.data = meeting.end_time
+            form.description.data = meeting.description
+            form.room.data = meeting.room
+
+            return form
+        else:
+
+            return CreateMeetingForm()
+
+
+    # Helper function to return meeting dictionary to client side script
+    def getMeetingData(self, id: "int") -> dict:
+        # find the selected meeting
+        meeting = Meeting.query.filter_by(id=id).first()
+
+        # Formatting time to H:M pm/am
+        start_formatted = datetime.strptime(f'{meeting.start_time.hour:02d}:{meeting.start_time.minute:02d}',
+                                            '%H:%M').strftime('%I:%M %p')
+        end_formatted = datetime.strptime(f'{meeting.end_time.hour:02d}:{meeting.end_time.minute:02d}', '%H:%M').strftime(
+            '%I:%M %p')
+
+        # Create dictionary to convert to json
+        meeting_json = {'title': meeting.title,
+                        'start': start_formatted,
+                        'end': end_formatted,
+                        'description': meeting.description}
+
+        return meeting_json
+
+
+    # Helper fucntiont to get room cost to client side script
+    def getRoomCostData(self, id: "int") -> dict:
+        room = Room.query.filter_by(id=id).first()
+
+        if room.special:
+            cost = {'cost': '$' + str(room.cost)}
+        else:
+            cost = {'cost': '-'}
+
+        return cost

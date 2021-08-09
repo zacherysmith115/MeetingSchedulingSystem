@@ -1,45 +1,27 @@
-from flask import url_for, redirect,  jsonify,  session
+from mss.Meeting.MeetingController import MeetingController
+from flask import json, url_for, redirect,  jsonify,  session
 from flask_login import  login_required
 from datetime import datetime 
 
 from mss import app, db
-from mss.Meeting.MeetingModels import Meeting, Room
 
+meeting_controller = MeetingController()
 
-@app.route('/getmeetingdata/<index_no>', methods=['GET'])
+# Request room data form client side
+@app.route('/getmeetingdata/<id>', methods=['GET'])
 @login_required
-def getMeetingData(index_no):
-    # find the selected meeting
-    meeting = Meeting.query.filter_by(id=index_no).first()
+def getMeetingData(id):
+    dictionary = meeting_controller.getMeetingData(id)
+    return jsonify(dictionary)
 
-    # Formatting time to H:M pm/am
-    start_formatted = datetime.strptime(f'{meeting.start_time.hour:02d}:{meeting.start_time.minute:02d}',
-                                        '%H:%M').strftime('%I:%M %p')
-    end_formatted = datetime.strptime(f'{meeting.end_time.hour:02d}:{meeting.end_time.minute:02d}', '%H:%M').strftime(
-        '%I:%M %p')
-
-    # Create json "like" object
-    meeting_json = {'title': meeting.title,
-                    'start': start_formatted,
-                    'end': end_formatted,
-                    'description': meeting.description}
-
-    return jsonify(meeting_json)
-
-
-@app.route('/getroomcost/<room_no>', methods=['GET'])
+# Request room cost from client side 
+@app.route('/getroomcost/<id>', methods=['GET'])
 @login_required
-def getRoomCost(room_no):
-    room = Room.query.filter_by(id=room_no).first()
-
-    if room.special:
-        cost = {'cost': '$' + str(room.cost)}
-    else:
-        cost = {'cost': '-'}
-
+def getRoomCost(id):
+    cost = meeting_controller.getRoomCostData(id)
     return jsonify(cost)
 
-
+# Store meeting id in cookie for edit meeting rendering
 @app.route('/dashboard/editmeeting/<id>', methods=['GET'])
 @login_required
 def editmeetingredirect(id):

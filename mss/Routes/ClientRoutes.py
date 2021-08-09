@@ -1,19 +1,13 @@
-from sqlalchemy import util
-from mss.Utility.UtilityController import UtilityController
-from re import L
-from mss.User.UserController import UserController
-from mss.Meeting.MeetingController import MeetingController
-from mss.Meeting.MeetingModels import Meeting, Room
-from mss.Meeting.MeetingForms import CreateMeetingForm
 from flask import render_template, url_for, flash, redirect, request,  session
 from flask_login import current_user, login_required
-from datetime import datetime, time
 
-from mss import app, db
-from mss.User.UserModels import Client, User
-from mss.Utility.UtilityModels import Card
-from mss.User.UserForms import MeetingSelectForm
-from mss.User.UserForms import EditAccountForm, PaymentInfoForm
+from mss import app
+from mss.User.UserForms import MeetingSelectForm, EditAccountForm, PaymentInfoForm
+from mss.Meeting.MeetingForms import CreateMeetingForm
+
+from mss.Utility.UtilityController import UtilityController
+from mss.User.UserController import UserController
+from mss.Meeting.MeetingController import MeetingController
 
 meeting_controller = MeetingController()
 user_controller = UserController()
@@ -76,101 +70,67 @@ def addPaymentInfo():
     utility_controller.buildCardInfoForm(current_user, form) 
     
     # form is validated on submit record to db
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         
         if utility_controller.addCard(current_user, form):
             flash('Payment info updated', 'success')
+            
         else:
             flash('Ooops something went wrong! No changes recorded', 'danger')
         
         redirect(url_for('addPaymentInfo'))
 
-
     return render_template('PaymentInfo.html', form=form)
 
+
+
 # Client ticket center routing method
-@app.route('/TicketCenter', methods=['GET', 'POST'])
+@app.route('/User/TicketCenter', methods=['GET', 'POST'])
 @login_required
 def ticketCenter():
     return render_template('TicketCenter.html')
 
 
-@app.route('/dashboard/createMeeting', methods=['GET', 'POST'])
+
+# Client create meeting routing method
+@app.route('/User/Dashboard/CreateMeeting', methods=['GET', 'POST'])
 @login_required
 def createMeeting():
     form = CreateMeetingForm()
 
-    # build selectable times for the form
-    times = []
-    for i in range(7, 17):
-        for j in range(0, 60, 15):
-            times.append(time(i, j).strftime('%I:%M %p'))
-
-    form.start_time.choices = [times[i] for i in range(0, len(times))]
-    form.end_time.choices = [times[i] for i in range(0, len(times))]
-
-    # build selectable rooms for the form
-    rooms = []
-    for room in Room.query.all():
-        rooms.append(room.id)
-
-    form.room.choices = rooms
-
     if request.method == 'POST' and form.validate_on_submit():
 
-        participants = []
-        for entry in form.participants.entries:
-            participants.append(Client.query.filter_by(email=entry.email.data).first())
-
-        start_time = datetime.combine(form.date.data, datetime.strptime(form.start_time.data, "%I:%M %p").time())
-        end_time = datetime.combine(form.date.data, datetime.strptime(form.end_time.data, "%I:%M %p").time())
-
-        room = Room.query.filter_by(id=form.room.data).first()
-
-        meeting = Meeting(creator_id=current_user.id, creator=current_user,
-                        title=form.title.data, start_time=start_time, end_time=end_time,
-                        description=form.description.data, room_id=room.id,
-                        room=room, participants=participants)
-
-        db.session.add(meeting)
-        db.session.commit()
-
-        flash('Meeting added to your calendar!', 'success')
-        return redirect(url_for('dashboard'))
+        if meeting_controller.createMeeting(current_user, form):
+            flash('Meeting added to your calendar!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Oops something went wrong! No changes saved', 'danger')
 
     return render_template('CreateMeeting.html', form=form)
 
 
 
-@app.route('/dashboard/editmeeting', methods=['GET', 'POST'])
+# Cleint edit meeting routing method
+@app.route('/User/Dashboard/EditMeeting', methods=['GET', 'POST'])
 @login_required
 def editmeeting():
 
     # pull meeting id from cookie
     id = session['messages']
-    meeting = Meeting.query.filter_by(id=id).first()
 
-    form = CreateMeetingForm(participants = meeting.participants)
-    times = []
-    for i in range(7, 17):
-        for j in range(0, 60, 15):
-            times.append(time(i, j).strftime('%I:%M %p'))
+    form = CreateMeetingForm()
 
-    form.start_time.choices = [times[i] for i in range(0, len(times))]
-    form.end_time.choices = [times[i] for i in range(0, len(times))]
+    # Submit changes to commit 
+    if request.method == 'POST' and form.validate_on_submit():
+        if meeting_controller.editMeeting(id, form):
+            flash('Meeting updated!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Oops something went wrong! No changes saved', 'danger')
 
-    rooms = []
-    for room in Room.query.all():
-        rooms.append(room.id)
-
-    form.room.choices = rooms
-
+    # Prepopulate the meeting details
     if request.method == 'GET':
-        form.title.data = meeting.title
-        form.date.data = meeting.start_time.date()
-        # add preselected time?
-        form.description.data = meeting.description
+        form = meeting_controller.buildEditMeetingForm(id)
         return render_template('CreateMeeting.html', form=form)
-
 
     return render_template('CreateMeeting.html', form=form)
