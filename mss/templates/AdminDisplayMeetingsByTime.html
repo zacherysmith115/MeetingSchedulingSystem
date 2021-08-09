@@ -1,0 +1,49 @@
+{% extends "AdminHome.html" %}
+{% block content %}
+
+    <div class = "content">
+        <div class="text-center">
+            <h3>Display Meetings By Time</h3>
+        </div>
+        <br>
+        <form action="#" method="POST">
+            {{ form.dt_start_date.label(class="form-control-label") }}
+            {{ form.dt_start_date(class_='Start Date') }}
+            {{ form.hidden_tag() }}
+            {{ form.dt_start_time.label(class="form-control-label") }}
+            {{ form.dt_start_time(class_='Start Time') }}
+            {{ form.hidden_tag() }}
+            <br>
+            {{ form.dt_end_date.label(class="form-control-label") }}
+            {{ form.dt_end_date(class_='End Date') }}
+            {{ form.hidden_tag() }}
+            {{ form.dt_end_time.label(class="form-control-label") }}
+            {{ form.dt_end_time(class_='End Time') }}
+            {{ form.hidden_tag() }}
+            <input type="submit"/>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Room #</th>
+                <th scope="col">Start Date & Time</th>
+                <th scope="col">End Date & Time</th>
+                <th scope="col">Creator ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for meeting in meetings %}
+              <tr>
+                <th scope="row">{{meeting.room_id}}</th>
+                <td>{{meeting.start_time}}</td>
+                <td>{{meeting.end_time}}</td>
+                <td>{{meeting.creator}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+
+    <a href="AdminDisplayMeetings">Return To Display Meetings Selection Page</a>
+    </div>
+{% endblock content %}

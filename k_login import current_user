@@ -1,0 +1,105 @@
+[1mdiff --cc mss/forms.py[m
+[1mindex 02bf5f4,241b1bf..0000000[m
+[1m--- a/mss/forms.py[m
+[1m+++ b/mss/forms.py[m
+[36m@@@ -53,4 -59,99 +59,98 @@@[m [mclass PaymentInfoForm(FlaskForm)[m
+  [m
+      submit = SubmitField('Save Changes')[m
+  [m
+[31m- >>>>>>> main[m
+[32m+ [m
+[32m+ class DelRoomForm(FlaskForm):[m
+[32m+     del_room = StringField('Delete Room', validators=[DataRequired(), Length(max=20)])[m
+[32m+     submit = SubmitField('Delete Room Submit')[m
+[32m+ [m
+[32m+ [m
+[32m+ class AddRoomForm(FlaskForm):[m
+[32m+     add_room = StringField('Add Room', validators=[DataRequired(), Length(max=20)])[m
+[32m+     submit = SubmitField('Add Room Submit')[m
+[32m+ [m
+[32m+ [m
+[32m+ class ParticipantForm(FlaskForm):[m
+[32m+     email = StringField('Email', validators=[DataRequired(), Email()])[m
+[32m+ [m
+[32m+     def validate_email(self, email):[m
+[32m+         client = Client.query.filter_by(email=email.data).first()[m
+[32m+ [m
+[32m+         if not client:[m
+[32m+             raise ValidationError('Participant must have an account!')[m
+[32m+ [m
+[32m+         if current_user.email == client.email:[m
+[32m+             raise ValidationError('Cant invite yourself!')[m
+[32m+ [m
+[32m+ [m
+[32m+ class CreateMeetingForm(FlaskForm):[m
+[32m+     title = StringField('Title', validators=[DataRequired(), Length(max=120)])[m
+[32m+     date = DateField('Date', format='%m/%d/%y', validators=[DataRequired()])[m
+[32m+     start_time = SelectField('Start Time', coerce=str)[m
+[32m+     end_time = SelectField('End Time', coerce=str)[m
+[32m+     description = TextAreaField('Description')[m
+[32m+     room = SelectField('Room', coerce=int)[m
+[32m+     participants = FieldList(FormField(ParticipantForm), min_entries=1)[m
+[32m+ [m
+[32m+     submit = SubmitField('Submit')[m
+[32m+ [m
+[32m+     # custom validation[m
+[32m+     def validate_end_time(self, end_time):[m
+[32m+         start = datetime.strptime(self.start_time.data, '%I:%M %p')[m
+[32m+         end = datetime.strptime(self.end_time.data, '%I:%M %p')[m
+[32m+ [m
+[32m+         if start >= end:[m
+[32m+             raise ValidationError('End time must be after start time')[m
+[32m+ [m
+[32m+ [m
+[32m+ class UpdateUserBill(FlaskForm):[m
+[32m+     client_id = StringField('Client ID', validators=[DataRequired(), Length(max=20)])[m
+[32m+     total = StringField('Update Total', validators=[DataRequired(), Length(max=20)])[m
+[32m+     date = StringField('Update Due Date', validators=[DataRequired(), Length(max=20)])[m
+[32m+     submit = SubmitField('Submit Billing Changes')[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeeting(FlaskForm):[m
+[32m+     select_meeting = SelectField('Please Select Meetings to Display', coerce=str)[m
+[32m+     submit = SubmitField('Display Meetings')[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeetingByWeek(FlaskForm):[m
+[32m+     dt = DateFieldHTML5('DatePicker', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeetingByDay(FlaskForm):[m
+[32m+     dt = DateFieldHTML5('DatePicker', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])[m
+[32m+     dt = DateFieldHTML5('Select Start of Week', format='%Y-%m-%d', default=datetime.now(),[m
+[32m+                         validators=[DataRequired()])[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeetingByDay(FlaskForm):[m
+[32m+     dt = DateFieldHTML5('Select Day', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])[m
+[32m+ [m
+[32m+ [m
+[32m+ def roomQuery():[m
+[32m+     return Room.query[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeetingByRoom(FlaskForm):[m
+[32m+     select_room = QuerySelectField('Select Room', query_factory=roomQuery, allow_blank=True)[m
+[32m+ [m
+[32m+ [m
+[32m+ def userQuery():[m
+[32m+     return User.query[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeetingByPerson(FlaskForm):[m
+[32m+     select_person = QuerySelectField(query_factory=userQuery, allow_blank=True)[m
+[32m+ [m
+[32m+ [m
+[32m+ class AdminSelectMeetingByTime(FlaskForm):[m
+[32m+     dt_start_date = DateFieldHTML5('Start Date', format='%Y-%m-%d', default=datetime.now(),[m
+[32m+                                    validators=[DataRequired()])[m
+[32m+     dt_start_time = TimeFieldHTML5('Start Time', format='%H:%M', default=datetime.now(),[m
+[32m+                                    validators=[DataRequired()])[m
+[32m+     dt_end_date = DateFieldHTML5('End Date', format='%Y-%m-%d', default=datetime.now(),[m
+[32m+                                  validators=[DataRequired()])[m
+[32m+     dt_end_time = TimeFieldHTML5('End Time', format='%H:%M', default=datetime.now(),[m
+[32m+                                  validators=[DataRequired()])[m
+[31m -[m
