@@ -1,21 +1,30 @@
 import datetime
 from mss import db
 from mss.models import *
+from mss.pw_encrypt import *
+# from passlib.hash import pbkdf2_sha256
 
 # reset db
 db.drop_all()
 db.create_all()
 
 # populate admin data
-db.session.add(Admin(first_name='Zachery', last_name='Smith', email='zachery.smith@pss.com', password='password'))
-db.session.add(Admin(first_name='Sandy', last_name='Lee', email='sandy.lee@pss.com', password='password'))
-db.session.add(Admin(first_name='Hope', last_name='Fisher', email='hope.fisher@pss.com', password='password'))
+db.session.add(Admin(first_name='Zachery', last_name='Smith', email='zachery.smith@pss.com',
+                     password=pwd_context.hash('password')))
+db.session.add(Admin(first_name='Sandy', last_name='Lee', email='sandy.lee@pss.com',
+                     password=pwd_context.hash('password')))
+db.session.add(Admin(first_name='Hope', last_name='Fisher', email='hope.fisher@pss.com',
+                     password=pwd_context.hash('password')))
 
 # populate client data
-john = Client(first_name='John', last_name='Doe', email='john.doe@pss.com', password='password')
-sarah = Client(first_name='Sarah', last_name='Brown', email='sarah.brown@pss.com', password='password')
-james = Client(first_name='James', last_name='Cook', email='james.cook@pss.com', password='password')
-kelly = Client(first_name='Kelly', last_name='Chen', email='kelly.chen@pss.com', password='password')
+john = Client(first_name='John', last_name='Doe', email='john.doe@pss.com',
+              password=pwd_context.hash('password'))
+sarah = Client(first_name='Sarah', last_name='Brown', email='sarah.brown@pss.com',
+               password=pwd_context.hash('something'))
+james = Client(first_name='James', last_name='Cook', email='james.cook@pss.com',
+               password=pwd_context.hash('password'))
+kelly = Client(first_name='Kelly', last_name='Chen', email='kelly.chen@pss.com',
+               password=pwd_context.hash('password'))
 db.session.add(john)
 db.session.add(sarah)
 db.session.add(james)

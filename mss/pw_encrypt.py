@@ -12,17 +12,17 @@ pwd_context = CryptContext(
 
 # encrypt
 def encrypt_password(password):
-    return pwd_context.encrypt(password)
-
+    return pwd_context.hash(password)
 
 # -- TO ENCRYPT--
 # before storing to database:
-#       encrypt_password()
+#       encrypt_password( )
 
 
 # verify
 def check_encrypted_password(password, hashed):
     return pwd_context.verify(password, hashed)
+
 # -- TO VERIFY--
 # after user enters password to login:
-#       check_encrypted_password()
+#       check_encrypted_password( , )

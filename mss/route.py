@@ -7,7 +7,7 @@ from mss.models import *
 from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy.orm.collections import InstrumentedList
 from sqlalchemy.sql import *
-
+from mss.pw_encrypt import *
 
 # contains all the routing scripts to navigate the application #
 
@@ -23,7 +23,7 @@ def login():
         user = User.query.filter(User.email == form.email.data).first()
 
         # Ensure email is in the db and submitted password matches password on record
-        if user and user.password == form.password.data:
+        if user and pwd_context.verify(form.password.data, user.password):
             login_user(user, remember=False)
 
             # Route to client home page
@@ -52,7 +52,7 @@ def createAccount():
     if form.validate_on_submit():
         if '@pss.com' in form.email.data:
             client = Client(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
-                            password=form.password.data)
+                            password=pwd_context.hash(form.password.data))  # -!- HERE -!-
             db.session.add(client)
             db.session.commit()
             flash('Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data, 'success')

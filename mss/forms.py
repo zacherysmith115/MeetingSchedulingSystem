@@ -14,7 +14,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationE
 from mss.models import User, Client, Room
 from mss import app, db
 from sqlalchemy import inspect
-
+from mss.pw_encrypt import *
 
 # Contains all the forms to dynamically server to the browser #
 
@@ -30,6 +30,8 @@ class CreateAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(), Length(max=60)])
     password = PasswordField('Password', validators=[DataRequired()])
     password_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+
+
 
     submit = SubmitField('Create Account')
 
