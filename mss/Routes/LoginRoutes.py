@@ -1,16 +1,12 @@
 from flask import render_template, url_for, flash, redirect, request
-from flask_login import login_user, current_user, logout_user, login_required
-from sqlalchemy.orm.collections import InstrumentedList
+from flask_login import login_user, logout_user
 
 from mss import app, db
 from mss.User.UserModels import Client, User, Admin
 from mss.User.UserForms import LoginForm, CreateAccountForm
+from mss.User.UserController import UserController
 
-
-# Routes: login
-#         logout
-#         createaccount
-
+user_controller = UserController()
 
 # Login routing method for both the Admin and Client
 @app.route('/', methods=['GET', 'POST'])
@@ -22,9 +18,9 @@ def login():
 
         # Query the db for email
         user = User.query.filter(User.email == form.email.data).first()
-
+        print(user.password)
         # Ensure email is in the db and submitted password matches password on record
-        if user and user.password == form.password.data:
+        if user and user_controller.verifyPassword(form.password.data, user.password):
             login_user(user, remember=False)
 
             # Route to client home page
@@ -56,7 +52,7 @@ def createAccount():
     if form.validate_on_submit():
         if '@pss.com' in form.email.data:
             client = Client(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
-                            password=form.password.data)
+                            password=user_controller.encryptPassword(form.password.data))
             db.session.add(client)
             db.session.commit()
             flash('Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data, 'success')

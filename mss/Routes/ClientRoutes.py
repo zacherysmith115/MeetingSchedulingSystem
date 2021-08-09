@@ -8,10 +8,13 @@ from mss.Meeting.MeetingForms import CreateMeetingForm
 from mss.Utility.UtilityController import UtilityController
 from mss.User.UserController import UserController
 from mss.Meeting.MeetingController import MeetingController
+from mss.Ticket.TicketController import TicketController
+from mss.Ticket.TicketForms import NewTicketForm, TicketSelectForm, TicketViewForm
 
 meeting_controller = MeetingController()
 user_controller = UserController()
 utility_controller = UtilityController()
+ticket_controller = TicketController()
 
 # Client dashboard routing method
 @app.route('/User/Dashboard', methods=['GET'])
@@ -84,13 +87,37 @@ def addPaymentInfo():
 
 
 
-# Client ticket center routing method
-@app.route('/User/TicketCenter', methods=['GET', 'POST'])
+# Client new ticket routing method
+@app.route('/User/TicketCenter/NewTicket', methods=['GET', 'POST'])
 @login_required
-def ticketCenter():
-    return render_template('TicketCenter.html')
+def newTicket():
 
+    form = NewTicketForm()
+    form.id.data = ticket_controller.getNewTicketNumber()
 
+    if request.method == 'POST' and form.validate_on_submit:
+        
+        if(ticket_controller.createTicket(current_user, form)):
+            flash('Ticket created succesfully!', 'success')
+        else:
+            flash('Oops something went wrong', 'danger')
+
+    return render_template('NewTicket.html', form = form)
+
+# Client view old tickets routing method
+@app.route('/User/TicketCenter/PastTickets', methods=['GET', 'POST'])
+@login_required
+def oldTickets():
+    form = TicketSelectForm()
+    form.ticket_select.query = ticket_controller.ticketQueryFactory(current_user.id)
+
+    if request.method == 'POST' and form.validate_on_submit():
+        view = TicketViewForm()
+        ticket = form.ticket_select.data
+        ticket_controller.buildTicketViewForm(ticket, view)
+        return render_template('OldTickets.html', form = form, ticketform = view)
+
+    return render_template('OldTickets.html', form = form)
 
 # Client create meeting routing method
 @app.route('/User/Dashboard/CreateMeeting', methods=['GET', 'POST'])

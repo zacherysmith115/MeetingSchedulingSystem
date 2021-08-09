@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
     }
 
     def __repr__(self) -> str:
-        return f"User: {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
 
 
 # Client model class: one to one relationship with card and one to many relationship with bill
@@ -53,7 +53,7 @@ class Client(User):
     }
 
     def __repr__(self) -> str:
-        return f"Client: {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
 
 
 # Admin model class
@@ -70,4 +70,4 @@ class Admin(User):
     }
 
     def __repr__(self) -> str:
-        return f"Admin: {self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}"

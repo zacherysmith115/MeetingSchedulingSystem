@@ -11,6 +11,7 @@ class UtilityController():
     def __init__(self) -> None:
         self.db = __import__('mss').db
 
+
     # Helper function to build the payment info form when a client accesses the page
     def buildCardInfoForm(self, user: "Client", form: "PaymentInfoForm") -> None:
         card = Card.query.filter_by(client_id = user.id).first()
@@ -60,3 +61,5 @@ class UtilityController():
 
         except:
             return False
+
+    

@@ -5,20 +5,35 @@ from mss.Meeting.MeetingModels import *
 from mss.Utility.UtilityModels import *
 from mss.Ticket.TicketModels import *
 
+from mss.User.UserController import UserController
+
+user_controller = UserController()
+
 # reset db
 db.drop_all()
 db.create_all()
 
 # populate admin data
-db.session.add(Admin(first_name='Zachery', last_name='Smith', email='zachery.smith@pss.com', password='password'))
-db.session.add(Admin(first_name='Sandy', last_name='Lee', email='sandy.lee@pss.com', password='password'))
-db.session.add(Admin(first_name='Hope', last_name='Fisher', email='hope.fisher@pss.com', password='password'))
+zach = Admin(first_name='Zachery', last_name='Smith', email='zachery.smith@pss.com', 
+                password= user_controller.encryptPassword('password'))
+sandy = Admin(first_name='Sandy', last_name='Lee', email='sandy.lee@pss.com', 
+                password= user_controller.encryptPassword('password'))
+hope = Admin(first_name='Hope', last_name='Fisher', email='hope.fisher@pss.com',
+                password= user_controller.encryptPassword('password'))
+
+db.session.add(zach)
+db.session.add(sandy)
+db.session.add(hope)
 
 # populate client data
-john = Client(first_name='John', last_name='Doe', email='john.doe@pss.com', password='password')
-sarah = Client(first_name='Sarah', last_name='Brown', email='sarah.brown@pss.com', password='password')
-james = Client(first_name='James', last_name='Cook', email='james.cook@pss.com', password='password')
-kelly = Client(first_name='Kelly', last_name='Chen', email='kelly.chen@pss.com', password='password')
+john = Client(first_name='John', last_name='Doe', email='john.doe@pss.com',
+                password= user_controller.encryptPassword('password'))
+sarah = Client(first_name='Sarah', last_name='Brown', email='sarah.brown@pss.com', 
+                password= user_controller.encryptPassword('password'))
+james = Client(first_name='James', last_name='Cook', email='james.cook@pss.com',
+                password= user_controller.encryptPassword('password'))
+kelly = Client(first_name='Kelly', last_name='Chen', email='kelly.chen@pss.com',
+                password= user_controller.encryptPassword('password'))
 db.session.add(john)
 db.session.add(sarah)
 db.session.add(james)
@@ -77,6 +92,19 @@ db.session.add(m1)
 db.session.add(m2)
 db.session.add(m3)
 db.session.add(m4)
+
+t1 = Ticket(content = "This system never freaking works! Thanks Sandy.", creator_id = john.id, creator = john)
+t1.response = "Sorry it never works! We are doing our best"
+t1.admin_id = sandy.id
+t1.admin = sandy
+
+t2 = Ticket(content = "This system never freaking works! Thanks Hope", creator_id = kelly.id, creator = kelly)
+t2.response = "Sorry we are doing our best to fix it up"
+t2.admin_id = hope.id
+t2.admin = hope
+
+db.session.add(t1)
+db.session.add(t2)
 
 # commit changes
 db.session.commit()
