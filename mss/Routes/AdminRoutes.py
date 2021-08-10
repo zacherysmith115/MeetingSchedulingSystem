@@ -12,7 +12,7 @@ from mss.Meeting.MeetingForms import AddRoomForm, DelRoomForm
 from mss.User.UserForms import EditAccountForm
 from mss.Ticket.TicketForms import TicketResponseForm, TicketSelectForm
 
-from mss.User.UserController import UserController
+from mss.User.UserController import UserController, authenticate_admin
 from mss.Meeting.MeetingController import MeetingController
 from mss.Ticket.TicketController import TicketController
 from mss.Utility.UtilityController import UtilityController
@@ -23,9 +23,12 @@ ticket_controller = TicketController()
 utility_controller = UtilityController()
 
 
+
+
 # Admin dashboard routing method -> reroute to display meetings
 @app.route('/Admin/Dashboard', methods=['GET'])
 @login_required
+@authenticate_admin
 def adminDashboard():
     return redirect(url_for('adminDisplayMeetings'))
 
@@ -33,6 +36,7 @@ def adminDashboard():
 # Admin edit account routing method
 @app.route('/Admin/EditAccount', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminEditAccount():
     form = EditAccountForm()
 
@@ -59,6 +63,7 @@ def adminEditAccount():
 # Admin ticket center routing method
 @app.route('/Admin/TicketCenter', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminTicketCenter():
     form = TicketSelectForm()
     form.ticket_select.query = ticket_controller.adminTicketQueryFactory()
@@ -91,6 +96,7 @@ def adminTicketCenter():
 # Admin display meetings routing method
 @app.route('/Admin/DisplayMeetings', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetings():
     form = AdminSelectMeeting()
     
@@ -118,6 +124,7 @@ def adminDisplayMeetings():
 # Admin Display Meetings By Week
 @app.route('/Admin/DisplayMeetings/ByWeek', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByWeek():
     form = AdminSelectMeetingByDay()
     form.dt.label.text = 'Select Start of Week:'
@@ -134,6 +141,7 @@ def adminDisplayMeetingsByWeek():
 # Admin Display Meetings By Day
 @app.route('/Admin/DisplayMeetings/ByDay', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByDay():
     form = AdminSelectMeetingByDay()
 
@@ -149,6 +157,7 @@ def adminDisplayMeetingsByDay():
 # Admin Display Meetings By Person
 @app.route('/Admin/DisplayMeetings/ByPerson', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByPerson():
     form = AdminSelectMeetingByPerson()
     
@@ -163,6 +172,7 @@ def adminDisplayMeetingsByPerson():
 # Admin Display Meetings By Room
 @app.route('/Admin/DisplayMeetings/ByRoom', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByRoom():
     form = AdminSelectMeetingByRoom()
    
@@ -177,6 +187,7 @@ def adminDisplayMeetingsByRoom():
 # Admin Display Meetings By Time
 @app.route('/Admin/DisplayMeetings/ByTime', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByTime():
     form = AdminSelectMeetingByTime()
 
@@ -198,6 +209,7 @@ def adminDisplayMeetingsByTime():
 # Admin edit admin accounts routing method
 @app.route('/Admin/EditAdminAccounts', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminEditAdminAccounts():
     return render_template('AdminEditAdminAccounts.html')
 
@@ -205,6 +217,7 @@ def adminEditAdminAccounts():
 # Admin edit rooms routing method
 @app.route('/Admin/EditRooms', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminEditRooms():
     delform = DelRoomForm()
     addform = AddRoomForm()
@@ -241,6 +254,7 @@ def adminEditRooms():
 # Admin update bill routing method
 @app.route('/Admin/UpdateUserBill', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminUpdateUserBill():
     form = SelectUserForm()
     billform = UpdateBillForm()
@@ -263,6 +277,6 @@ def adminUpdateUserBill():
 
     if request.method == 'POST' and not billform.validate_on_submit():
         form = SelectUserForm()
-        return render_template('AdminUpdateUserBill.html', form=form, billform=billform, bills = client.bills)
+        return render_template('AdminUpdateUserBill.html', form=form, billform=billform)
 
     return render_template('AdminUpdateUserBill.html', form=form)
