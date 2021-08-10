@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from mss.Utility.UtilityForms import UpdateBillForm
 from mss.Meeting.MeetingModels import Room
 
@@ -66,7 +66,7 @@ class UtilityController():
 
     # Create bill on room reservation 
     def createBill(self, user: "Client", room: "Room") -> bool:
-        bill = Bill(client_id = id, client = user, date = datetime.now(), total = room.cost)
+        bill = Bill(client_id = id, client = user, date = date.today(), total = room.cost)
 
         try:
             self.db.session.add(bill)
@@ -97,7 +97,7 @@ class UtilityController():
         
 
         client = Client.query.filter_by(id = int(form.client_id.data)).first()
-        bill = Bill(client_id = client.id, client = client, date = datetime.now(), total = delta)
+        bill = Bill(client_id = client.id, client = client, date = date.today(), total = delta)
         
         self.db.session.add(bill)
         self.db.session.commit()

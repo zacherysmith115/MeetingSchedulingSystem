@@ -1,7 +1,23 @@
+from flask import url_for, redirect
 from passlib.context import CryptContext
+from flask_login import  current_user
 
-from mss.User.UserModels import User
+
+from mss.User.UserModels import User, Admin
 from mss.User.UserForms import EditAccountForm
+
+# Custom decorator to validate user is an admin
+def authenticate_admin(func):
+    def decorator(*args, **kwargs):
+
+        if not isinstance(current_user, Admin):
+            return redirect(url_for('dashboard'))
+        else:
+            return func(*args, **kwargs)
+    
+    decorator.__name__ = func.__name__
+    return decorator
+
 class UserController:      
 
     db = None
@@ -11,7 +27,7 @@ class UserController:
     __pwd_context = CryptContext(
         schemes=["pbkdf2_sha256"],
         default="pbkdf2_sha256",
-        pbkdf2_sha256__default_rounds=30000  # -!- if wait time is too long reduce number of rounds -!-
+        pbkdf2_sha256__default_rounds=30000  
     )
 
 
