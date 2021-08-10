@@ -1,26 +1,26 @@
-from mss.Ticket.TicketController import TicketController
-from mss.Ticket.TicketForms import TicketResponseForm, TicketSelectForm
-from mss.Meeting.MeetingController import MeetingController
 from flask import render_template, url_for, flash, redirect, request  
 from flask_login import  current_user,  login_required
 from sqlalchemy.sql.expression import and_
 from datetime import datetime, timedelta 
 
-from mss import app, db
+from mss import app
 
-from mss.Utility.UtilityModels import Bill
 from mss.Meeting.MeetingModels import Meeting
 
 from mss.Utility.UtilityForms import *
 from mss.Meeting.MeetingForms import AddRoomForm, DelRoomForm
 from mss.User.UserForms import EditAccountForm
+from mss.Ticket.TicketForms import TicketResponseForm, TicketSelectForm
 
 from mss.User.UserController import UserController
 from mss.Meeting.MeetingController import MeetingController
+from mss.Ticket.TicketController import TicketController
+from mss.Utility.UtilityController import UtilityController
 
 user_controller = UserController()
 meeting_controller = MeetingController()
 ticket_controller = TicketController()
+utility_controller = UtilityController()
 
 
 # Admin dashboard routing method -> reroute to display meetings
@@ -242,15 +242,27 @@ def adminEditRooms():
 @app.route('/Admin/UpdateUserBill', methods=['GET', 'POST'])
 @login_required
 def adminUpdateUserBill():
-    form = UpdateUserBill()
+    form = SelectUserForm()
+    billform = UpdateBillForm()
 
+    client = form.client_select.data
     if request.method == 'POST' and form.validate_on_submit():
-        bill = Bill(client_id = form.client_id.data, date = form.date.data, total = form.total.data)
-        db.session.add(bill)
-        db.session.commit()
-        flash('Bill updated', 'success')
+        utility_controller.buildUpdateBillForm(client, billform)
+        
+        return render_template('AdminUpdateUserBill.html', form=form, billform = billform, bills = client.bills)
 
-        return redirect(url_for('adminUpdateUserBill'))
 
+    if request.method == 'POST' and billform.validate_on_submit():
+        form = SelectUserForm()
+
+        if utility_controller.updateBill(billform):
+            flash('Bill adjusted succesfully', 'success')
+        else:
+            flash('Oops something went wrong. No changes recorded.', 'danger')
+
+
+    if request.method == 'POST' and not billform.validate_on_submit():
+        form = SelectUserForm()
+        return render_template('AdminUpdateUserBill.html', form=form, billform=billform, bills = client.bills)
 
     return render_template('AdminUpdateUserBill.html', form=form)

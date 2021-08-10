@@ -35,12 +35,14 @@ class ParticipantForm(FlaskForm):
         if current_user.email == client.email:
             raise ValidationError('Cant invite yourself!')
 
+    
+
 
 class CreateMeetingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=120)])
     date = DateFieldHTML5('Date', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])
 
-    start_time = TimeFieldHTML5('Start Time:', format='%H:%M', default=datetime.now(), validators=[DataRequired()])
+    start_time = TimeFieldHTML5('Start Time', format='%H:%M', default=datetime.now(), validators=[DataRequired()])
     end_time = TimeFieldHTML5('End Time', format='%H:%M', default=datetime.now(), validators=[DataRequired()])
     description = TextAreaField('Description')
 
@@ -49,13 +51,31 @@ class CreateMeetingForm(FlaskForm):
 
     submit = SubmitField('Submit')
 
-    # custom validation
+    # Ensure end time is later than start time
     def validate_end_time(self, end_time):
         if self.start_time.data >= self.end_time.data:
             raise ValidationError('End time must be after start time')
 
+    # Ensure room is available 
+    def validate_room(self, room):
+
+         # build datetime 
+        start_time = datetime.combine(self.date.data, self.start_time.data)
+        end_time = datetime.combine(self.date.data, self.end_time.data)
+
+        for meeting in room.data.meetings:
+            print(meeting)
+            if meeting.start_time < start_time < meeting.end_time or meeting.start_time < end_time < meeting.end_time or meeting.start_time == start_time:
+                tstr1 = meeting.start_time.time().strftime("%I:%M %p")
+                tstr2 = meeting.end_time.time().strftime("%I:%M %p")
+                raise ValidationError("Room unavaible from "  + tstr1 + " to " + tstr2)
+            
+
+    # Ensure nobody has a conflicting schedule 
     def validate_participants(self, participants):
         
+        flag = False
+
         for entry in participants.entries:
             client = Client.query.filter_by(email=entry.email.data).first()
 
@@ -72,7 +92,11 @@ class CreateMeetingForm(FlaskForm):
                 end_time = datetime.combine(self.date.data, self.end_time.data)
 
                 if meeting.start_time < start_time < meeting.end_time or meeting.start_time < end_time < meeting.end_time:
-                    raise ValidationError('Participtant: ' + client.email + ' has a conflicting schedule.')
+                    entry.email.errors.append(ValidationError('Participtant: ' + client.email + ' has a conflicting schedule.'))
+                    flag = True
+        
+        if flag:
+            raise ValidationError()
             
 
 
