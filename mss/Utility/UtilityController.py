@@ -1,7 +1,8 @@
 from datetime import datetime
+from mss.Meeting.MeetingModels import Room
 
 from mss.User.UserModels import Client
-from mss.Utility.UtilityModels import Card
+from mss.Utility.UtilityModels import Bill, Card
 from mss.User.UserForms import PaymentInfoForm
 
 class UtilityController():
@@ -62,4 +63,13 @@ class UtilityController():
         except:
             return False
 
-    
+    # Create bill on room reservation 
+    def createBill(self, user: "Client", room: "Room") -> bool:
+        bill = Bill(client_id = id, client = user, date = datetime.now(), total = room.cost)
+
+        try:
+            self.db.session.add(bill)
+            self.db.session.commit()
+            return True
+        except:
+            return False

@@ -54,6 +54,29 @@ class CreateMeetingForm(FlaskForm):
         if self.start_time.data >= self.end_time.data:
             raise ValidationError('End time must be after start time')
 
+    def validate_participants(self, participants):
+        
+        for entry in participants.entries:
+            client = Client.query.filter_by(email=entry.email.data).first()
+
+            from mss.Meeting.MeetingController import MeetingController
+            controller = MeetingController()
+
+            meetings = controller.buildMeeetingListParticipant(client)
+            meetings.extend(controller.buildMeetingListCreator(client))
+
+            for meeting in meetings:
+
+                # build datetime 
+                start_time = datetime.combine(self.date.data, self.start_time.data)
+                end_time = datetime.combine(self.date.data, self.end_time.data)
+
+                if meeting.start_time < start_time < meeting.end_time or meeting.start_time < end_time < meeting.end_time:
+                    raise ValidationError('Participtant: ' + client.email + ' has a conflicting schedule.')
+            
+
+
+
 class AdminSelectMeetingByTime(FlaskForm):
     dt_start_date = DateFieldHTML5('Start Date', format='%Y-%m-%d', default=datetime.now(),
                                    validators=[DataRequired()])

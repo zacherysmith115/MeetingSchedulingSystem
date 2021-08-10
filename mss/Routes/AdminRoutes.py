@@ -23,12 +23,11 @@ meeting_controller = MeetingController()
 ticket_controller = TicketController()
 
 
-# Admin dashboard routing method
+# Admin dashboard routing method -> reroute to display meetings
 @app.route('/Admin/Dashboard', methods=['GET'])
 @login_required
 def adminDashboard():
-    return render_template('AdminDashboard.html')
-
+    return redirect(url_for('adminDisplayMeetings'))
 
 
 # Admin edit account routing method
@@ -235,7 +234,6 @@ def adminEditRooms():
 
         return redirect(url_for('adminEditRooms'))
 
-    
 
     return render_template('AdminEditRooms.html', delform=delform, addform=addform, rooms=Room.query.all())
 

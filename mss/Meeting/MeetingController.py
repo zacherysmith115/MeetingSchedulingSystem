@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime
+from mss.Utility.UtilityController import UtilityController
 from mss.Meeting.MeetingForms import CreateMeetingForm
 from sqlalchemy.sql.elements import and_
 from sqlalchemy.orm.collections import InstrumentedList
@@ -133,8 +134,11 @@ class MeetingController():
             self.db.session.add(meeting)
             self.db.session.commit()
 
-            return True
+            if room.special:
+                utility_controller = UtilityController()
+                utility_controller.createBill(user, room)
 
+            return True
         except:
             return False
 

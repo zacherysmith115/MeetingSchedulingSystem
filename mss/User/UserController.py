@@ -30,7 +30,7 @@ class UserController:
             user.first_name = form.first_name.data
             user.last_name = form.last_name.data
             user.email = form.last_name.data
-            user.password = form.password.data
+            user.password = self.encryptPassword(form.password.data)
             return True
         except:
             return False
