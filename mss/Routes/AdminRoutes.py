@@ -1,3 +1,5 @@
+from mss.Ticket.TicketController import TicketController
+from mss.Ticket.TicketForms import TicketResponseForm, TicketSelectForm
 from mss.Meeting.MeetingController import MeetingController
 from flask import render_template, url_for, flash, redirect, request  
 from flask_login import  current_user,  login_required
@@ -6,7 +8,6 @@ from datetime import datetime, timedelta
 
 from mss import app, db
 
-from mss.User.UserModels import Client, User
 from mss.Utility.UtilityModels import Bill
 from mss.Meeting.MeetingModels import Meeting
 
@@ -19,6 +20,7 @@ from mss.Meeting.MeetingController import MeetingController
 
 user_controller = UserController()
 meeting_controller = MeetingController()
+ticket_controller = TicketController()
 
 
 # Admin dashboard routing method
@@ -59,7 +61,31 @@ def adminEditAccount():
 @app.route('/Admin/TicketCenter', methods=['GET', 'POST'])
 @login_required
 def adminTicketCenter():
-    return render_template('AdminTicketCenter.html')
+    form = TicketSelectForm()
+    form.ticket_select.query = ticket_controller.adminTicketQueryFactory()
+
+    view = TicketResponseForm()
+
+    if request.method == 'POST' and form.validate_on_submit():
+        ticket = form.ticket_select.data
+
+        ticket_controller.buildResponseViewform(current_user, ticket, view)
+        return render_template('AdminTicketCenter.html', form = form, ticketform = view)
+
+    if request.method == 'POST' and view.validate_on_submit():
+        form = TicketSelectForm()
+        form.ticket_select.query = ticket_controller.adminTicketQueryFactory()
+
+        if ticket_controller.addResponse(current_user, view):
+
+            flash('Reponse recorded!', 'success')
+            return render_template('AdminTicketCenter.html', form = form)
+        else:
+            flash('Oops! Something went wrong, no changes recorded', 'danger')
+            return render_template('AdminTicketCenter.html', form = form)
+        
+
+    return render_template('AdminTicketCenter.html', form = form)
 
 
 

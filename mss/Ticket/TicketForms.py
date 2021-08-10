@@ -6,9 +6,6 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from mss.Ticket.TicketModels import Ticket
 
 
-def ticketQuery(id: "int"):
-    return Ticket.query.filter_by(creator_id = id)
-
 class NewTicketForm(FlaskForm):
 
     id = IntegerField('Ticket Number', render_kw={'readonly': True}, validators=[DataRequired()])
@@ -18,7 +15,7 @@ class NewTicketForm(FlaskForm):
 
 class TicketSelectForm(FlaskForm):
     user_id = None
-    ticket_select = QuerySelectField(query_factory = ticketQuery, allow_blank=False)
+    ticket_select = QuerySelectField(query_factory = lambda: Ticket.query, allow_blank=False, validators=[DataRequired()])
 
     submit = SubmitField('View')
 
@@ -28,4 +25,12 @@ class TicketViewForm(FlaskForm):
     admin = StringField('Admin', render_kw={'readonly': True})
     response = TextAreaField('Response', render_kw={'readonly': True})
 
+class TicketResponseForm(FlaskForm):
+    id = IntegerField('Ticket Number', render_kw={'readonly': True})
+    content = TextAreaField('Complaint', render_kw={'readonly': True})
+    admin = StringField('Admin', render_kw={'readonly': True})
+    response = TextAreaField('Response', validators=[DataRequired()])
+    
+    submit = SubmitField('Respond')
+    
 

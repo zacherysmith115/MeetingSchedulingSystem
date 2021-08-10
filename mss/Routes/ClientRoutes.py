@@ -104,6 +104,7 @@ def newTicket():
 
     return render_template('NewTicket.html', form = form)
 
+
 # Client view old tickets routing method
 @app.route('/User/TicketCenter/PastTickets', methods=['GET', 'POST'])
 @login_required
@@ -118,6 +119,7 @@ def oldTickets():
         return render_template('OldTickets.html', form = form, ticketform = view)
 
     return render_template('OldTickets.html', form = form)
+
 
 # Client create meeting routing method
 @app.route('/User/Dashboard/CreateMeeting', methods=['GET', 'POST'])

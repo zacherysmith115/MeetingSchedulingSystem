@@ -57,7 +57,7 @@ db.session.add(kellys_card)
 room_101 = Room(id=101)
 room_102 = Room(id=102)
 room_103 = Room(id=103)
-room_200 = Room(id=200, special=True, cost = 50)
+room_200 = Room(id=200, special=True, cost = 100)
 db.session.add(room_101)
 db.session.add(room_102)
 db.session.add(room_103)
@@ -102,6 +102,9 @@ t2 = Ticket(content = "This system never freaking works! Thanks Hope", creator_i
 t2.response = "Sorry we are doing our best to fix it up"
 t2.admin_id = hope.id
 t2.admin = hope
+
+t3 = Ticket(content = "This system is still broken.... Do you know how to do your job?", creator_id = james.id, creator = james)
+t4 = Ticket(content = "I'm over using this app, wish we could just use Outlook like everyone else!", creator_id = sarah.id, creator = sarah)
 
 db.session.add(t1)
 db.session.add(t2)
