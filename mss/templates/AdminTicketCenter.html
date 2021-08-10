@@ -1,4 +1,65 @@
 {% extends "AdminHome.html" %}
 {% block content %}
 
+<div class="content">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+
+            <div class="form-group">
+                {{form.ticket_select.label(class="form-control-label")}}
+                {% if form.ticket_select.errors %}
+                {{form.ticket_select.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.ticket_select.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{form.ticket_select(class="form-control")}}
+                {% endif %}
+            </div>
+            
+        </fieldset>
+
+        <div class="form-group">
+            {{form.submit(class="btn btn-primary")}}
+        </div>
+
+    </form>
+</div>
+
+{% if ticketform %}
+    <div class="content">
+        <form method="POST" action="">
+        {{ticketform.hidden_tag()}}
+            <fieldset class = "form-group">
+                {{ticketform.id.label(class="form-control-label")}}
+                {{ticketform.id(class="form-control")}}
+
+                {{ticketform.content.label(class="form-control-label")}}
+                {{ticketform.content(class="form-control")}}
+
+                {{ticketform.admin.label(class="form-control-label")}}
+                {{ticketform.admin(class="form-control")}}
+
+                {{ticketform.response.label(class="form-control-label")}}
+                {% if ticketform.response.errors %}
+                {{ticketform.response.label(class="form-control-label is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in ticketform.response.errors %}
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ticketform.response(class="form-control")}}
+                {% endif %}
+            </fieldset> 
+
+            <div class="form-group">
+                {{ticketform.submit(class="btn btn-primary")}}
+            </div>
+        </form>
+    </div>
+{% endif %}
 {% endblock content %}

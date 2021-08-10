@@ -1,33 +1,60 @@
 {% extends "Home.html" %}
 {% block content %}
-<div class = "content">
 
-        <div class="text-center">
-            <h3>My Meetings</h3>
+<div class = "content">
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+
+        <div class="text-left">
+          <h3>My Meetings</h3>
         </div>
         <br>
+      
 
-        <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">Room #</th>
-                <th scope="col">Start Date & Time</th>
-                <th scope="col">End Date & Time</th>
-                <th scope="col">Creator ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for meeting in meetings %}
-              <tr>
-                <th scope="row">{{meeting.room_id}}</th>
-                <td>{{meeting.start_time}}</td>
-                <td>{{meeting.end_time}}</td>
-                <td>{{meeting.creator}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-        </table>
+        <div class="form-group">
+            {{form.select.label(class="form-control-label")}}
+            {% if form.select.errors %}
+            {{form.select.label(class="form-control-label is-invalid")}}
+            <div class="invalid-feedback">
+                {% for error in form.select.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{form.select(class="form-control")}}
+            {% endif %}
+        </div>
+    </fieldset>
+
+    <div class="form-group">
+        {{form.submit(class="btn btn-primary")}}
     </div>
+
+  </form>
+
+  <br>
+    <div class="content">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Room #</th>
+            <th scope="col">Start Date & Time</th>
+            <th scope="col">End Date & Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for meeting in meetings %}
+          <tr>
+            <th scope="row">{{meeting.room_id}}</th>
+            <td>{{meeting.start_time}}</td>
+            <td>{{meeting.end_time}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
 
 
 

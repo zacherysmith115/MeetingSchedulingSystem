@@ -9,39 +9,42 @@
 
         <form action="#" method="POST">
             {{ form.select_person.label(class="form-control-label") }}<br>
-            {{ form.select_person }}
+            {{ form.select_person(class="form-control") }}
             {{ form.hidden_tag() }}
             <ul>
                 {%  for error in form.select_person.errors %}
                 <li>{{  error }}</li>
                 {%  endfor %}
             </ul>
-            <input type="submit"/>
+            {{form.submit(class="btn btn-primary")}}
 
         </form>
+        <br>
+        <a href="{{url_for('adminDisplayMeetings')}}">Return To Display Meetings Selection Page</a>
 
-        <table class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">Room #</th>
-                <th scope="col">Start Date & Time</th>
-                <th scope="col">End Date & Time</th>
-                <th scope="col">Creator ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for meeting in meetings %}
-              <tr>
-                <th scope="row">{{meeting.room_id}}</th>
-                <td>{{meeting.start_time}}</td>
-                <td>{{meeting.end_time}}</td>
-                <td>{{meeting.creator}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-        </table>
-
-    <a href="AdminDisplayMeetings">Return To Display Meetings Selection Page</a>
+    </div>
+    <br>
+    <div class="content">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Room #</th>
+            <th scope="col">Start Date & Time</th>
+            <th scope="col">End Date & Time</th>
+            <th scope="col">Creator ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for meeting in meetings %}
+          <tr>
+            <th scope="row">{{meeting.room_id}}</th>
+            <td>{{meeting.start_time}}</td>
+            <td>{{meeting.end_time}}</td>
+            <td>{{meeting.creator}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
     </div>
 
 

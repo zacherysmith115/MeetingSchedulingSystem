@@ -12,4 +12,5 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'danger'
 
-from mss import route
+
+from mss.Routes import AdminRoutes, ClientRoutes, LoginRoutes, UtilityRoutes
