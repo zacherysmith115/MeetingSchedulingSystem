@@ -6,47 +6,19 @@
         <fieldset class="form-group">
 
             <div class="form-group">
-                {{form.client_id.label(class="form-control-label")}}
-                {% if form.client_id.errors %}
-                {{form.label(class="form-control-label is-invalid")}}
+                {{form.client_select.label(class="form-control-label")}}
+                {% if form.client_select.errors %}
+                {{form.client_select.label(class="form-control-label is-invalid")}}
                 <div class="invalid-feedback">
-                    {% for error in form.client_id.errors %}
+                    {% for error in form.client_select.errors %}
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{form.client_id(class="form-control")}}
+                {{form.client_select(class="form-control")}}
                 {% endif %}
             </div>
 
-
-            <div class="form-group">
-                {{form.total.label(class="form-control-label")}}
-                {% if form.total.errors %}
-                {{form.label(class="form-control-label is-invalid")}}
-                <div class="invalid-feedback">
-                    {% for error in form.total.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{form.total(class="form-control")}}
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                {{form.date.label(class="form-control-label")}}
-                {% if form.date.errors %}
-                {{form.label(class="form-control-label is-invalid")}}
-                <div class="invalid-feedback">
-                    {% for error in form.date.errors %}
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{form.date(class="form-control")}}
-                {% endif %}
-            </div>
         </fieldset>
         <div class="form-group">
             {{form.submit(class="btn btn-primary")}}
@@ -55,25 +27,57 @@
     </form>
 </div>
 
+{% if billform %}
+    <div class="content">
+        <form method="POST" action="">
+        {{billform.hidden_tag()}}
+            <fieldset class = "form-group">
+                {{billform.client.label(class="form-control-label")}}
+                {{billform.client(class="form-control")}}
+
+                {{billform.client_id.label(class="form-control-label")}}
+                {{billform.client_id(class="form-control")}}
+
+                {{billform.current_total.label(class="form-control-label")}}
+                {{billform.current_total(class="form-control")}}
+
+                {{billform.new_total.label(class="form-control-label")}}
+                {% if billform.new_total.errors %}
+                    {{billform.new_total(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in billform.new_total.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                {{billform.new_total(class="form-control")}}
+                {% endif %}
+            </fieldset> 
+
+            <div class="form-group">
+                {{billform.submit(class="btn btn-primary")}}
+            </div>
+        </form>
+    </div>
+{% endif %}
+
+
+
 <br>
 <div class = "content">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Client ID</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
+                <th scope="col">Bill ID</th>
                 <th scope="col">Total</th>
-                <th scope="col">Due</th>
+                <th scope="col">Date</th>
             </tr>
         </thead>
         <tbody>
-            {% for client in clients %}
+            {% for bill in bills %}
             <tr>
-                <th scope="row">{{user.id}}</th>
-                <td>{{user.first_name}}</td>
-                <td>{{user.last_name}}</td>
-                <td>{{bill.total}}</td>
+                <th scope="row">{{bill.id}}</th>
+                <td>${{bill.total}}</td>
                 <td>{{bill.date}}</td>
             </tr>
             {% endfor %}

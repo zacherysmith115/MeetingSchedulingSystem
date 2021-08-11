@@ -33,7 +33,7 @@ class Bill(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     client = db.relationship('mss.User.UserModels.Client', back_populates='bills')
 
-    date = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.Date, nullable=False)
     total = db.Column(db.Integer, nullable=False)
 
     def __repr__(self) -> str:

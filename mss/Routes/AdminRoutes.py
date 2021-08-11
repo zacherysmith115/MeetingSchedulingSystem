@@ -1,22 +1,22 @@
-from mss.Ticket.TicketController import TicketController
-from mss.Ticket.TicketForms import TicketResponseForm, TicketSelectForm
-from mss.Meeting.MeetingController import MeetingController
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_required
+
 from sqlalchemy.sql.expression import and_
 from datetime import datetime, timedelta
 
 from mss import app, db
 
-from mss.Utility.UtilityModels import Bill
 from mss.Meeting.MeetingModels import Meeting
 
 from mss.Utility.UtilityForms import *
 from mss.Meeting.MeetingForms import AddRoomForm, DelRoomForm
 from mss.User.UserForms import EditAccountForm
+from mss.Ticket.TicketForms import TicketResponseForm, TicketSelectForm
 
-from mss.User.UserController import UserController
+from mss.User.UserController import UserController, authenticate_admin
 from mss.Meeting.MeetingController import MeetingController
+from mss.Ticket.TicketController import TicketController
+from mss.Utility.UtilityController import UtilityController
 
 from mss.User.UserModels import Admin
 from mss.User.UserForms import AdminEditAdminAccountsForm
@@ -24,11 +24,15 @@ from mss.User.UserForms import AdminEditAdminAccountsForm
 user_controller = UserController()
 meeting_controller = MeetingController()
 ticket_controller = TicketController()
+utility_controller = UtilityController()
+
+
 
 
 # Admin dashboard routing method -> reroute to display meetings
 @app.route('/Admin/Dashboard', methods=['GET'])
 @login_required
+@authenticate_admin
 def adminDashboard():
     return redirect(url_for('adminDisplayMeetings'))
 
@@ -36,6 +40,7 @@ def adminDashboard():
 # Admin edit account routing method
 @app.route('/Admin/EditAccount', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminEditAccount():
     form = EditAccountForm()
 
@@ -60,6 +65,7 @@ def adminEditAccount():
 # Admin ticket center routing method
 @app.route('/Admin/TicketCenter', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminTicketCenter():
     form = TicketSelectForm()
     form.ticket_select.query = ticket_controller.adminTicketQueryFactory()
@@ -90,6 +96,7 @@ def adminTicketCenter():
 # Admin display meetings routing method
 @app.route('/Admin/DisplayMeetings', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetings():
     form = AdminSelectMeeting()
 
@@ -116,6 +123,7 @@ def adminDisplayMeetings():
 # Admin Display Meetings By Week
 @app.route('/Admin/DisplayMeetings/ByWeek', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByWeek():
     form = AdminSelectMeetingByDay()
     form.dt.label.text = 'Select Start of Week:'
@@ -131,6 +139,7 @@ def adminDisplayMeetingsByWeek():
 # Admin Display Meetings By Day
 @app.route('/Admin/DisplayMeetings/ByDay', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByDay():
     form = AdminSelectMeetingByDay()
 
@@ -145,6 +154,7 @@ def adminDisplayMeetingsByDay():
 # Admin Display Meetings By Person
 @app.route('/Admin/DisplayMeetings/ByPerson', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByPerson():
     form = AdminSelectMeetingByPerson()
 
@@ -158,6 +168,7 @@ def adminDisplayMeetingsByPerson():
 # Admin Display Meetings By Room
 @app.route('/Admin/DisplayMeetings/ByRoom', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByRoom():
     form = AdminSelectMeetingByRoom()
 
@@ -171,6 +182,7 @@ def adminDisplayMeetingsByRoom():
 # Admin Display Meetings By Time
 @app.route('/Admin/DisplayMeetings/ByTime', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminDisplayMeetingsByTime():
     form = AdminSelectMeetingByTime()
 
@@ -188,9 +200,12 @@ def adminDisplayMeetingsByTime():
     return render_template('AdminDisplayMeetingsByTime.html', form=form)
 
 
+
+
 # Admin edit rooms routing method
 @app.route('/Admin/EditRooms', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminEditRooms():
     delform = DelRoomForm()
     addform = AddRoomForm()
@@ -226,16 +241,26 @@ def adminEditRooms():
 # Admin update bill routing method
 @app.route('/Admin/UpdateUserBill', methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def adminUpdateUserBill():
-    form = UpdateUserBill()
+    form = SelectUserForm()
+    billform = UpdateBillForm()
 
+    client = form.client_select.data
     if request.method == 'POST' and form.validate_on_submit():
-        bill = Bill(client_id=form.client_id.data, date=form.date.data, total=form.total.data)
-        db.session.add(bill)
-        db.session.commit()
-        flash('Bill updated', 'success')
+        utility_controller.buildUpdateBillForm(client, billform)
+        
+        return render_template('AdminUpdateUserBill.html', form=form, billform = billform, bills = client.bills)
 
-        return redirect(url_for('adminUpdateUserBill'))
+
+    if request.method == 'POST' and billform.validate_on_submit():
+        form = SelectUserForm()
+
+        if utility_controller.updateBill(billform):
+            flash('Bill adjusted succesfully', 'success')
+        else:
+            flash('Oops something went wrong. No changes recorded.', 'danger')
+
 
     return render_template('AdminUpdateUserBill.html', form=form)
 
@@ -243,6 +268,7 @@ def adminUpdateUserBill():
 # Admin create admin account routing method
 @app.route("/Admin/EditAdminAccounts", methods=['GET', 'POST'])
 @login_required
+@authenticate_admin
 def editAdminAccounts():
     form = AdminEditAdminAccountsForm()
 

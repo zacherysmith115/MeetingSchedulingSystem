@@ -1,9 +1,10 @@
+from re import S
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.fields.core import SelectField
 from wtforms.fields.html5 import DateField as DateFieldHTML5
 from wtforms.fields.html5 import TimeField as TimeFieldHTML5
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, ValidationError
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from datetime import datetime
 
@@ -21,11 +22,27 @@ def roomQuery():
 
 
 # Form to update user billing information
-class UpdateUserBill(FlaskForm):
-    client_id = QuerySelectField(query_factory=clientQuery, allow_blank=False)
-    total = StringField('Update Total:', validators=[DataRequired(), Length(max=20)])
-    date = StringField('Update Due Date:', validators=[DataRequired(), Length(max=20)])
-    submit = SubmitField('Submit Billing Changes')
+class SelectUserForm(FlaskForm):
+    client_select = QuerySelectField(query_factory=clientQuery, allow_blank=False)
+    submit = SubmitField('View')
+
+# Form to update user billing information
+class UpdateBillForm(FlaskForm):
+    client = StringField('Client', render_kw={'readonly': True}, validators=[DataRequired(), Length(max=60)])
+    client_id = StringField('Client ID', render_kw={'readonly': True}, validators=[DataRequired(), Length(max=60)])
+    current_total = StringField('Current Total:', render_kw={'readonly': True}, validators=[DataRequired(), Length(max=20)])
+    new_total = StringField('New Total:', validators=[DataRequired(), Length(max=20)])
+
+    submit = SubmitField('Submit')
+
+    def validate_new_total(self, new_total):
+
+        s = new_total.data.replace('$', '')
+
+        if not s.isdigit():
+            raise ValidationError("Please follow $XXX format")
+            
+
 
 
 # Form to provide a display method for an admin
