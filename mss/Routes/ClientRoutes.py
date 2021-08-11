@@ -53,7 +53,7 @@ def editAccount():
     if request.method == 'POST' and form.validate_on_submit():
         user_controller.updateAccount(current_user, form)
         flash("Account updated succesfully!", 'success')
-        redirect(url_for('editAccount'))
+        return redirect(url_for('editAccount'))
 
     if request.method == 'POST' and not form.validate_on_submit():
         user_controller.buildCreateAccountForm(current_user, form)
@@ -81,7 +81,7 @@ def addPaymentInfo():
         else:
             flash('Ooops something went wrong! No changes recorded', 'danger')
         
-        redirect(url_for('addPaymentInfo'))
+        return redirect(url_for('addPaymentInfo'))
 
     return render_template('PaymentInfo.html', form=form)
 
@@ -146,6 +146,10 @@ def editmeeting():
 
     # pull meeting id from cookie
     id = session['messages']
+    
+    if not meeting_controller.verifyCreator(id, current_user):
+        flash('You dont own that meeting', 'danger')
+        return redirect(url_for('dashboard'))
 
     form = CreateMeetingForm()
 
@@ -160,6 +164,7 @@ def editmeeting():
     # Prepopulate the meeting details
     if request.method == 'GET':
         form = meeting_controller.buildEditMeetingForm(id)
-        return render_template('CreateMeeting.html', form=form)
+        
+        return render_template('CreateMeeting.html', form=form, num_participant=len(form.participants.entries))
 
-    return render_template('CreateMeeting.html', form=form)
+    return render_template('CreateMeeting.html', form=form, num_participant=len(form.participants.entries))

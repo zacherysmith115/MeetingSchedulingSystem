@@ -18,7 +18,7 @@ def login():
 
         # Query the db for email
         user = User.query.filter(User.email == form.email.data).first()
-        print(user.password)
+
         # Ensure email is in the db and submitted password matches password on record
         if user and user_controller.verifyPassword(form.password.data, user.password):
             login_user(user, remember=False)

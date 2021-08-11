@@ -53,7 +53,7 @@ def adminEditAccount():
         # db updated succesfully
         if user_controller.updateAccount(current_user, form):
             flash('Account Updated!', 'success')
-            redirect(url_for('adminDashboard'))
+            return redirect(url_for('adminDashboard'))
 
         else:
             flash('Oops! Something went wrong, no changes were saved', 'danger')
@@ -278,8 +278,10 @@ def editAdminAccounts():
                           password=user_controller.encryptPassword(form.password.data))
             db.session.add(admin)
             db.session.commit()
+            
             flash('Admin Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data)
             return redirect(url_for('adminDashboard'))
         else:
             flash('Must use a valid company email', 'danger')
+
     return render_template('AdminEditAdminAccounts.html', title='Create New Admin Account', form=form)

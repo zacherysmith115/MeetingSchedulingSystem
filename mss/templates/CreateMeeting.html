@@ -1,7 +1,7 @@
 {% extends "Home.html" %}
 {% block content %}
-<div class="content">
-    <form method="POST" action="">
+<div class="content" X>
+    <form method="POST" autocomplete="off" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <div class="form-group">
@@ -128,7 +128,8 @@
 </div>
 
 <script>
-    counter = 1;
+    var counter = {{ num_participant }};
+
     var room_select = document.getElementById('room');
     room_select.onchange = function(){
         room = room_select.value;
