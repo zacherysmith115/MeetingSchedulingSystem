@@ -31,6 +31,7 @@ C:\Users\Zachery Smith\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.
 
 
 
+**To Run:**
 In order to run the system via the command line an environment variable must be created. 
 
 For MacOS/Unix:
@@ -68,14 +69,22 @@ python app.py
 **Database Testing:**
 
 For development/testing with the database you can run the `builddb.py` script to add data to the database and also as a means of resetting the database. For dynamic testing with the database, please use the following commands to help query the database after you have dynamically added data to it. 
+```shell
+	python .\builddb.py
+	python
+	from mss import db
+	from mss.User.UserModels import *
+```
+note: additional database models available to query include MeetingModels, TicketModels, and UtilityModels.
 
+Example of user query by email: 
 ```shell
 PS C:\Users\Zachery Smith\Desktop\Documents\Behrend\SWENG455\Project\MeetingSchedulingSystem> python .\builddb.py
 PS C:\Users\Zachery Smith\Desktop\Documents\Behrend\SWENG455\Project\MeetingSchedulingSystem> python 
 Python 3.8.10 (tags/v3.8.10:3d8993a, May  3 2021, 11:48:03) [MSC v.1928 64 bit (AMD64)] on win32
 Type "help", "copyright", "credits" or "license" for more information.
 >>> from mss import db 
->>> from mss.models import *
+>>> from mss.User.UserModels import *
 >>> db.session.query(User).filter(User.email == 'zachery.smith@pss.com').first()    
 Admin: Zachery Smith
 >>> exit()
