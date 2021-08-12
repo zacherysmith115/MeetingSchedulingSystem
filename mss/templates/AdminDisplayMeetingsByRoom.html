@@ -30,17 +30,19 @@
           <thead>
             <tr>
               <th scope="col">Room #</th>
-              <th scope="col">Start Date & Time</th>
-              <th scope="col">End Date & Time</th>
-              <th scope="col">Creator ID</th>
+              <th scope="col">Date</th>
+              <th scope="col">Start Time</th>
+              <th scope="col">End Time</th>
+              <th scope="col">Creator</th>
             </tr>
           </thead>
           <tbody>
             {% for meeting in meetings %}
             <tr>
               <th scope="row">{{meeting.room_id}}</th>
-              <td>{{meeting.start_time}}</td>
-              <td>{{meeting.end_time}}</td>
+              <td>{{meeting.start_time.date().strftime("%m-%d-%y")}}</td>
+              <td>{{meeting.start_time.time().strftime("%I:%M %p")}}</td>
+              <td>{{meeting.end_time.time().strftime("%I:%M %p")}}</td>
               <td>{{meeting.creator}}</td>
             </tr>
             {% endfor %}

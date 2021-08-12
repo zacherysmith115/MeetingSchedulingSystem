@@ -88,6 +88,8 @@ m4_descr = 'Trying to figure out whats wrong with my db relationships :['
 m4 = Meeting(creator_id=james.id, creator=james, participants=[john, sarah, kelly], title='Debugging my system',
              room_id=room_103.id, room=room_103, start_time=m4_start_time, end_time=m4_end_time, description = m4_descr)
 
+
+
 db.session.add(m1)
 db.session.add(m2)
 db.session.add(m3)

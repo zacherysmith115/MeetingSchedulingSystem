@@ -30,7 +30,6 @@ def login():
             # Route to admin home page
             if isinstance(user, Admin):
                 return redirect(url_for('adminDashboard'))
-
                 
         else:
             flash('Login unsuccessful', 'danger')
@@ -49,6 +48,7 @@ def logout():
 @app.route("/CreateAccount", methods=['GET', 'POST'])
 def createAccount():
     form = CreateAccountForm()
+    
     if form.validate_on_submit():
         if '@pss.com' in form.email.data:
             client = Client(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
@@ -56,7 +56,8 @@ def createAccount():
             db.session.add(client)
             db.session.commit()
             flash('Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data, 'success')
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('login'))
         else:
             flash('Must use a valid company email', 'danger')
+
     return render_template('CreateAccount.html', form=form)

@@ -45,8 +45,10 @@ class UserController:
         try:
             user.first_name = form.first_name.data
             user.last_name = form.last_name.data
-            user.email = form.last_name.data
+            user.email = form.email.data
             user.password = self.encryptPassword(form.password.data)
+            self.db.session.commit()
+
             return True
         except:
             return False

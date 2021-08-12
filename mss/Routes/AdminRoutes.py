@@ -98,7 +98,7 @@ def adminTicketCenter():
 @login_required
 @authenticate_admin
 def adminDisplayMeetings():
-    form = AdminSelectMeeting()
+    form = SelectMeetingForm()
 
     if request.method == 'GET':
         return render_template('AdminDisplayMeetings.html', form=form)
@@ -111,9 +111,9 @@ def adminDisplayMeetings():
         if selection == '2':
             return redirect(url_for('adminDisplayMeetingsByDay'))
         if selection == '3':
-            return redirect(url_for('adminDisplayMeetingsByPerson'))
-        if selection == '4':
             return redirect(url_for('adminDisplayMeetingsByRoom'))
+        if selection == '4':
+            return redirect(url_for('adminDisplayMeetingsByPerson'))
         if selection == '5':
             return redirect(url_for('adminDisplayMeetingsByTime'))
 
@@ -125,7 +125,7 @@ def adminDisplayMeetings():
 @login_required
 @authenticate_admin
 def adminDisplayMeetingsByWeek():
-    form = AdminSelectMeetingByDay()
+    form = SelectMeetingByDayForm()
     form.dt.label.text = 'Select Start of Week:'
 
     if request.method == 'POST' and form.validate_on_submit():
@@ -141,8 +141,8 @@ def adminDisplayMeetingsByWeek():
 @login_required
 @authenticate_admin
 def adminDisplayMeetingsByDay():
-    form = AdminSelectMeetingByDay()
-
+    form = SelectMeetingByDayForm()
+    
     if request.method == 'POST' and form.validate_on_submit():
         meetings = meeting_controller.getMeetingsInDelta(timedelta(days=1), form.dt.data.strftime('%Y-%m-%d'))
 
@@ -156,7 +156,7 @@ def adminDisplayMeetingsByDay():
 @login_required
 @authenticate_admin
 def adminDisplayMeetingsByPerson():
-    form = AdminSelectMeetingByPerson()
+    form = SelectMeetingByPersonForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         meetings = Meeting.query.filter(Meeting.creator == form.select_person.data)
@@ -170,7 +170,7 @@ def adminDisplayMeetingsByPerson():
 @login_required
 @authenticate_admin
 def adminDisplayMeetingsByRoom():
-    form = AdminSelectMeetingByRoom()
+    form = SelectMeetingByRoomForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         meetings = Meeting.query.filter(Meeting.room == form.select_room.data)
@@ -184,7 +184,7 @@ def adminDisplayMeetingsByRoom():
 @login_required
 @authenticate_admin
 def adminDisplayMeetingsByTime():
-    form = AdminSelectMeetingByTime()
+    form = SelectMeetingByTimeForm()
 
     if request.method == 'POST' and form.validate_on_submit():
         start = datetime.combine(form.dt_start_date.data,
@@ -228,7 +228,7 @@ def adminEditRooms():
     # Add room request
     if request.method == 'POST' and addform.validate_on_submit():
 
-        if meeting_controller.addRoom(addform.add_room.data):
+        if meeting_controller.addRoom(addform.add_room.data, addform.is_special.data):
             flash('Room ' + addform.add_room.data + ' added!', 'success')
         else:
             flash('Oops! Something went wrong. No changes saved.', 'danger')
@@ -271,17 +271,20 @@ def adminUpdateUserBill():
 @authenticate_admin
 def editAdminAccounts():
     form = AdminEditAdminAccountsForm()
+    print('Mayb ehere')
+    if request.method == 'POST' and form.validate_on_submit():
 
-    if form.validate_on_submit():
         if '@pss.com' in form.email.data:
             admin = Admin(first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data,
                           password=user_controller.encryptPassword(form.password.data))
             db.session.add(admin)
             db.session.commit()
-            
-            flash('Admin Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data)
+
+            flash('Admin Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data, 'success')
             return redirect(url_for('adminDashboard'))
         else:
             flash('Must use a valid company email', 'danger')
 
-    return render_template('AdminEditAdminAccounts.html', title='Create New Admin Account', form=form)
+            
+
+    return render_template('AdminEditAdminAccounts.html', form=form)

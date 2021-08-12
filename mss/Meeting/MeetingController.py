@@ -1,11 +1,11 @@
 from datetime import timedelta, datetime
-from mss.Utility.UtilityController import UtilityController
-from mss.Meeting.MeetingForms import CreateMeetingForm
 from sqlalchemy.sql.elements import and_
 from sqlalchemy.orm.collections import InstrumentedList
 
 from mss.Meeting.MeetingModels import Meeting, Room
 from mss.User.UserModels import Client
+from mss.Utility.UtilityController import UtilityController
+from mss.Meeting.MeetingForms import CreateMeetingForm
 
 
 class MeetingController():
@@ -20,11 +20,15 @@ class MeetingController():
         return Meeting.query.filter(and_(Meeting.start_time >= date, Meeting.start_time <= end_time))
 
     # Function add a room 
-    def addRoom(self, id: "int") -> bool:
+    def addRoom(self, id: "int", is_special: "bool") -> bool:
 
         # Check room doesnt exist
         if Room.query.filter_by(id=id).first() is None:
-            room = Room(id=id, special=False)
+            room = Room(id=id)
+
+            if is_special:
+                room.special = True
+                room.cost = 100
             try:
                 self.db.session.add(room)
                 self.db.session.commit()

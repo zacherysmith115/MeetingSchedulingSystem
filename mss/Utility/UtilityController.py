@@ -17,9 +17,9 @@ class UtilityController():
     # Helper function to build the payment info form when a client accesses the page
     def buildCardInfoForm(self, user: "Client", form: "PaymentInfoForm") -> None:
         card = Card.query.filter_by(client_id = user.id).first()
-
+   
         # No card attached to account 
-        if Card is None:
+        if not card:
             return
 
         form.card_name.data = card.name
@@ -27,41 +27,31 @@ class UtilityController():
         hidden_number = card.number
         hidden_number = '*' * 12 + card.number[len(card.number) - 4:]
         form.card_number.data = hidden_number
-
-        month_str = str(card.exp_date.month)
-        if len(month_str) != 2:
-            month_str = '0' + month_str
-
-        year_str = str(card.exp_date.year)
-        year_str = year_str[2:]
-
-        form.card_exp_date.data = month_str + '/' + year_str
+        form.card_exp_date.data = card.exp_date
 
 
     # Add or update the card information of a user
     def addCard(self, user: "Client", form: "PaymentInfoForm") -> bool:
         card = Card.query.filter_by(client_id = user.id).first()
 
-        exp_date_str = form.card_exp_date.data
-        date = datetime(year=int('20' + exp_date_str[3:]), month=int(exp_date_str[0:2]), day=1)
-
         try:
             # No previous associated card information
             if card is None:
                 card = Card(client_id=user.id, name=form.card_name.data,
-                            number=form.card_number.data, exp_date=date, ccv=form.card_ccv.data)
+                            number=form.card_number.data, exp_date=form.card_exp_date.data, ccv=form.card_ccv.data)
                 self.db.session.add(card)
 
             else:
                 card.name = form.card_name.data
                 card.number = form.card_number.data
-                card.exp_date = date
+                card.exp_date = form.card_exp_date.data
                 card.ccv = form.card_ccv.data
 
             self.db.session.commit()
             return True
 
-        except:
+        except Exception as e:
+            print(e)
             return False
 
     # Create bill on room reservation 

@@ -1,6 +1,8 @@
+from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.fields.core import SelectField
+from wtforms.fields.html5 import DateField as DateFieldHTML5
 from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
 from mss.User.UserModels import User
 
@@ -41,7 +43,7 @@ class EditAccountForm(FlaskForm):
 class PaymentInfoForm(FlaskForm):
     card_name = StringField('Name on Card', validators=[DataRequired(), Length(max=40)])
     card_number = StringField('Card Number', validators=[Length(min=16, max=16)])
-    card_exp_date = StringField('Card Expiration Date (MM/YY)', validators=[Length(min=5, max=5)])
+    card_exp_date = DateFieldHTML5('End Date:', format='%Y-%m-%d', default=datetime.now(), validators=[DataRequired()])
     card_ccv = PasswordField('CCV', validators=[Length(min=3, max=4)])
 
     submit = SubmitField('Save Changes')

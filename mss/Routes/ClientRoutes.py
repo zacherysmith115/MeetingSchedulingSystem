@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 
 from mss import app
 from mss.User.UserForms import MeetingSelectForm, EditAccountForm, PaymentInfoForm
-from mss.Meeting.MeetingForms import CreateMeetingForm
+from mss.Meeting.MeetingForms import CreateMeetingForm, EditMeetingForm
 
 from mss.Utility.UtilityController import UtilityController
 from mss.User.UserController import UserController
@@ -37,7 +37,6 @@ def myMeetings():
 
     if request.method == 'POST' and form.validate_on_submit():
         if form.select.data == '2':
-            print('ran')
             meetings = meeting_controller.buildMeeetingListParticipant(current_user)
 
     return render_template('MyMeetings.html', form=form, meetings=meetings)
@@ -51,9 +50,11 @@ def editAccount():
     form = EditAccountForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        user_controller.updateAccount(current_user, form)
-        flash("Account updated succesfully!", 'success')
-        return redirect(url_for('editAccount'))
+        if user_controller.updateAccount(current_user, form):
+            flash("Account updated succesfully!", 'success')
+            return redirect(url_for('editAccount'))
+        else:
+            flash("Oops something went wrong", "danger")
 
     if request.method == 'POST' and not form.validate_on_submit():
         user_controller.buildCreateAccountForm(current_user, form)
@@ -68,7 +69,7 @@ def editAccount():
 @login_required
 def addPaymentInfo():
     form = PaymentInfoForm()
-    card = current_user.card[0]
+    
     
     utility_controller.buildCardInfoForm(current_user, form) 
     
@@ -135,7 +136,7 @@ def createMeeting():
         else:
             flash('Oops something went wrong! No changes saved', 'danger')
 
-    return render_template('CreateMeeting.html', form=form)
+    return render_template('CreateMeeting.html', form=form, num_participant=len(form.participants.entries))
 
 
 
@@ -151,10 +152,10 @@ def editmeeting():
         flash('You dont own that meeting', 'danger')
         return redirect(url_for('dashboard'))
 
-    form = CreateMeetingForm()
+    form = EditMeetingForm()
 
     # Submit changes to commit 
-    if request.method == 'POST' and form.validate_on_submit():
+    if request.method == 'POST' and form.validate_edit_on_submit(id):
         if meeting_controller.editMeeting(id, form):
             flash('Meeting updated!', 'success')
             return redirect(url_for('dashboard'))
