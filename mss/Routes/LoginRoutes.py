@@ -8,6 +8,7 @@ from mss.User.UserController import UserController
 
 user_controller = UserController()
 
+
 # Login routing method for both the Admin and Client
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -35,7 +36,7 @@ def login():
             flash('Login unsuccessful', 'danger')
 
     # Credentials failed, resubmit Login page
-    return render_template('Login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 # Logout routing method
