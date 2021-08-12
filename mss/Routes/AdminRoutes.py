@@ -27,8 +27,6 @@ ticket_controller = TicketController()
 utility_controller = UtilityController()
 
 
-
-
 # Admin dashboard routing method -> reroute to display meetings
 @app.route('/Admin/Dashboard', methods=['GET'])
 @login_required
@@ -142,7 +140,7 @@ def adminDisplayMeetingsByWeek():
 @authenticate_admin
 def adminDisplayMeetingsByDay():
     form = SelectMeetingByDayForm()
-    
+
     if request.method == 'POST' and form.validate_on_submit():
         meetings = meeting_controller.getMeetingsInDelta(timedelta(days=1), form.dt.data.strftime('%Y-%m-%d'))
 
@@ -200,8 +198,6 @@ def adminDisplayMeetingsByTime():
     return render_template('AdminDisplayMeetingsByTime.html', form=form)
 
 
-
-
 # Admin edit rooms routing method
 @app.route('/Admin/EditRooms', methods=['GET', 'POST'])
 @login_required
@@ -249,9 +245,8 @@ def adminUpdateUserBill():
     client = form.client_select.data
     if request.method == 'POST' and form.validate_on_submit():
         utility_controller.buildUpdateBillForm(client, billform)
-        
-        return render_template('AdminUpdateUserBill.html', form=form, billform = billform, bills = client.bills)
 
+        return render_template('AdminUpdateUserBill.html', form=form, billform=billform, bills=client.bills)
 
     if request.method == 'POST' and billform.validate_on_submit():
         form = SelectUserForm()
@@ -260,7 +255,6 @@ def adminUpdateUserBill():
             flash('Bill adjusted succesfully', 'success')
         else:
             flash('Oops something went wrong. No changes recorded.', 'danger')
-
 
     return render_template('AdminUpdateUserBill.html', form=form)
 
@@ -280,11 +274,10 @@ def editAdminAccounts():
             db.session.add(admin)
             db.session.commit()
 
-            flash('Admin Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data, 'success')
+            flash('Admin Account successfully created for ' + form.first_name.data + ' ' + form.last_name.data,
+                  'success')
             return redirect(url_for('adminDashboard'))
         else:
             flash('Must use a valid company email', 'danger')
-
-            
 
     return render_template('AdminEditAdminAccounts.html', form=form)

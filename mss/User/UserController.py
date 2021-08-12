@@ -10,6 +10,8 @@ from mss.User.UserForms import EditAccountForm
 def authenticate_admin(func: "function"):
     def decorator(*args, **kwargs):
 
+        print(current_user)
+
         if not isinstance(current_user, Admin):
             return redirect(url_for('dashboard'))
         else:
