@@ -5,7 +5,6 @@ from mss import app
 from mss.User.UserForms import MeetingSelectForm, EditAccountForm, PaymentInfoForm
 from mss.Meeting.MeetingForms import CreateMeetingForm, EditMeetingForm
 
-from mss.Utility.UtilityController import UtilityController
 from mss.User.UserController import UserController
 from mss.Meeting.MeetingController import MeetingController
 from mss.Ticket.TicketController import TicketController
@@ -13,9 +12,7 @@ from mss.Ticket.TicketForms import NewTicketForm, TicketSelectForm, TicketViewFo
 
 from sqlalchemy.orm.collections import InstrumentedList
 from mss.User.UserModels import Client
-from datetime import timedelta, datetime
-from sqlalchemy.sql.elements import and_
-from mss.Meeting.MeetingModels import Meeting, Room
+
 from mss.Utility.UtilityController import UtilityController
 from mss.Meeting.MeetingForms import CreateMeetingForm
 
@@ -31,12 +28,7 @@ ticket_controller = TicketController()
 def dashboard():
     # Build meetings list to add to calendar
 
-    user = Client
-
-    if type(user.meetings_participant) is InstrumentedList:
-        meeting_events = meeting_controller.buildMeetingEvents(current_user)
-    else:
-        return render_template('AdminDashboard.html')
+    meeting_events = meeting_controller.buildMeetingEvents(current_user)
     return render_template('Dashboard.html', events=meeting_events)
 
 
