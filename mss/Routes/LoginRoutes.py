@@ -7,7 +7,6 @@ from mss.User.UserForms import LoginForm, CreateAccountForm
 from mss.User.UserController import UserController
 
 user_controller = UserController()
-print(user_controller)
 
 # Login routing method for both the Admin and Client
 @app.route('/', methods=['GET', 'POST'])
