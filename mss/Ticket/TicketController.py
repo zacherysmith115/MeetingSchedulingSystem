@@ -1,5 +1,5 @@
 from mss.Ticket.TicketForms import NewTicketForm, TicketResponseForm, TicketViewForm
-from mss.User.UserModels import Admin, User
+from mss.User.UserModels import Admin, Client
 from mss.Ticket.TicketModels import Ticket
 
 
@@ -19,7 +19,7 @@ class TicketController():
 
 
     # Helper function to create a new ticket and add it to the db 
-    def createTicket(self, user: "User", form: "NewTicketForm") -> bool:
+    def createTicket(self, user: "Client", form: "NewTicketForm") -> bool:
         
         ticket = Ticket(id = form.id.data, content = form.content.data, creator_id = user.id)
 

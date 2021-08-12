@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from mss.Utility.UtilityForms import UpdateBillForm
 from mss.Meeting.MeetingModels import Room
 

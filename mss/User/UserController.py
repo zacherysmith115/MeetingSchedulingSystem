@@ -1,13 +1,13 @@
 from flask import url_for, redirect
 from passlib.context import CryptContext
-from flask_login import  current_user
+from flask_login import current_user
 
 
 from mss.User.UserModels import User, Admin
 from mss.User.UserForms import EditAccountForm
 
 # Custom decorator to validate user is an admin
-def authenticate_admin(func):
+def authenticate_admin(func: "function"):
     def decorator(*args, **kwargs):
 
         if not isinstance(current_user, Admin):

@@ -218,7 +218,7 @@ class MeetingController():
         return cost
 
     # Helper function to verify current user is meeting creator
-    def verifyCreator(self, id: "int", user: "Client"):
+    def verifyCreator(self, id: "int", user: "Client") -> bool:
         meeting = Meeting.query.filter_by(id = id).first()
         return meeting.creator == user
 
