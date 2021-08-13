@@ -157,7 +157,10 @@ def adminDisplayMeetingsByPerson():
     form = SelectMeetingByPersonForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        meetings = Meeting.query.filter(Meeting.creator == form.select_person.data)
+        meetings = []
+        meetings.extend(meeting_controller.buildMeetingListCreator(form.select_person.data))
+        meetings.extend(meeting_controller.buildMeeetingListParticipant(form.select_person.data))
+
         return render_template('AdminDisplayMeetingsByPerson.html', form=form, meetings=meetings)
 
     return render_template('AdminDisplayMeetingsByPerson.html', form=form)

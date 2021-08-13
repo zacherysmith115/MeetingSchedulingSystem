@@ -140,17 +140,32 @@ class MeetingController:
             return False
 
     # Helper function to edit a meeting and record the changes to the db
-    def editMeeting(self, id: "int", form: "CreateMeetingForm") -> bool:
+    def editMeeting(self, id: "int", user: "Client", form: "CreateMeetingForm") -> bool:
 
         meeting = Meeting.query.filter_by(id=id).first()
 
-        form = CreateMeetingForm(participants=meeting.participants)
+        # form = CreateMeetingForm(participants=meeting.participants)
         meeting.title = form.title.data
         meeting.start_time = datetime.combine(form.date.data, form.start_time.data)
         meeting.end_time = datetime.combine(form.date.data, form.end_time.data)
         meeting.description = form.description.data
-        print(form.room.data)
-        meeting.room = form.room.data
+
+        old_room = meeting.room
+        new_room = form.room.data
+
+        meeting.room = new_room
+
+        if old_room is not new_room and new_room.special:
+                utility_controller = UtilityController()
+                utility_controller.createBill(user, new_room)
+
+        participants = []
+        for entry in form.participants.entries:
+            client = Client.query.filter_by(email=entry.email.data).first()
+            participants.append(client)
+            
+        meeting.participants = participants
+            
 
         try:
             self.db.session.commit()

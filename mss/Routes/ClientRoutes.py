@@ -100,8 +100,10 @@ def newTicket():
 
         if (ticket_controller.createTicket(current_user, form)):
             flash('Ticket created succesfully!', 'success')
+            return redirect(url_for('newTicket'))
         else:
             flash('Oops something went wrong', 'danger')
+        
 
     return render_template('NewTicket.html', form=form)
 
@@ -154,7 +156,7 @@ def editmeeting():
 
     # Submit changes to commit 
     if request.method == 'POST' and form.validate_edit_on_submit(id):
-        if meeting_controller.editMeeting(id, form):
+        if meeting_controller.editMeeting(id, current_user, form):
             flash('Meeting updated!', 'success')
             return redirect(url_for('dashboard'))
         else:

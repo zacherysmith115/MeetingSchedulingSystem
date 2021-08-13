@@ -7,13 +7,13 @@ from mss.User.UserForms import LoginForm, CreateAccountForm
 from mss.User.UserController import UserController
 
 user_controller = UserController()
-print(user_controller)
+
 
 # Login routing method for both the Admin and Client
 @app.route('/', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
+    
     # Ensure validation of form
     if request.method == 'POST' and form.validate_on_submit():
 
