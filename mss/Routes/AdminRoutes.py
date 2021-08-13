@@ -268,7 +268,7 @@ def adminUpdateUserBill():
 @authenticate_admin
 def editAdminAccounts():
     form = AdminEditAdminAccountsForm()
-    print('Mayb ehere')
+    print('Maybe here')
     if request.method == 'POST' and form.validate_on_submit():
 
         if '@pss.com' in form.email.data:

@@ -36,7 +36,7 @@ def login():
             flash('Login unsuccessful', 'danger')
 
     # Credentials failed, resubmit Login page
-    return render_template('Login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 # Logout routing method

@@ -21,6 +21,7 @@ pip install email_validator
 pip install flask_sqlalchemy
 pip install passlib
 pip install flask-login
+pip install -U Werkzeug
 ```
 
 Windows users will most likely need to set the appropriate path variable, if there is a warning message after the pip install for flask that the failure to set path. The path should be similar to below.
